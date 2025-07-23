@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>جوردن هوم - تفاصيل العقار</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      :root {
+        --primary-color: #065f46;
+        --primary-light: #10b981;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        direction: rtl;
+      }
+
+      .property-card {
+        transition: all 0.3s ease;
+      }
+
+      .nav-link {
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+      }
+
+      .nav-link.active {
+        background: linear-gradient(135deg, #065f46, #10b981);
+        color: white;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      }
+
+      /* Status badges */
+      .status-available {
+        background-color: #10b981;
+        color: white;
+      }
+      .status-reserved {
+        background-color: #f59e0b;
+        color: white;
+      }
+      .status-sold {
+        background-color: #ef4444;
+        color: white;
+      }
+
+      /* Apartment buttons for housing complexes */
+      .apartment-btn {
+        transition: all 0.3s ease;
+      }
+      .apartment-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .apartment-btn.active {
+        background: linear-gradient(135deg, #065f46, #10b981);
+        color: white;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      }
+
+      /* Enhanced Image Gallery Styles */
+      .image-gallery-container {
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      /* For Apartments - Full width gallery */
+      .apartment-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        height: 600px;
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      /* For Housing Complexes - Split layout with fixed proportions */
+      .housing-gallery {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 12px;
+        height: 600px;
+        animation: fadeIn 0.6s ease-out;
+        min-width: 0; /* Prevent grid overflow */
+      }
+
+      .main-image-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0; /* Prevent flex item overflow */
+      }
+
+      .main-image {
+        height: 450px;
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        min-width: 0; /* Prevent overflow */
+      }
+
+      .main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .thumbnails-strip {
+        display: flex;
+        gap: 10px;
+        height: 140px;
+        overflow: hidden;
+        padding: 5px;
+        position: relative;
+        min-width: 0; /* Prevent overflow */
+      }
+
+      .thumbnails-container {
+        display: flex;
+        gap: 10px;
+        transition: transform 0.3s ease;
+        min-width: 0; /* Prevent overflow */
+      }
+
+      .thumbnail {
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        border: 2px solid transparent;
+        flex-shrink: 0;
+      }
+
+      .thumbnail:hover {
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .thumbnail.active {
+        border-color: var(--primary-color);
+      }
+
+      .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .gallery-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 20;
+        font-size: 18px;
+      }
+
+      .gallery-nav-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .gallery-nav-btn.prev {
+        right: 15px;
+      }
+
+      .gallery-nav-btn.next {
+        left: 15px;
+      }
+
+      /* Navigation buttons in thumbnails strip */
+      .thumbnails-strip .gallery-nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+      }
+
+      .thumbnails-strip .gallery-nav-btn.prev {
+        right: 10px;
+      }
+
+      .thumbnails-strip .gallery-nav-btn.next {
+        left: 10px;
+      }
+
+      .apartment-selector {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: 600px;
+        overflow-y: auto;
+        padding: 5px;
+        width: 280px; /* Fixed width to prevent layout issues */
+        flex-shrink: 0; /* Prevent shrinking */
+      }
+
+      .apartment-selector-btn {
+        padding: 12px;
+        border-radius: 8px;
+        background-color: #f3f4f6;
+        text-align: right;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #e5e7eb;
+      }
+
+      .apartment-selector-btn:hover {
+        background-color: #e5e7eb;
+      }
+
+      .apartment-selector-btn.active {
+        background-color: #065f46;
+        color: white;
+        border-color: #065f46;
+      }
+
+      .more-images-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        text-align: center;
+        padding: 4px;
+        font-size: 12px;
+      }
+
+      .no-image-placeholder {
+        background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      /* Gallery indicator dots */
+      .gallery-indicators {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 20px;
+        z-index: 10;
+      }
+
+      .gallery-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .gallery-dot.active {
+        background: white;
+        transform: scale(1.2);
+      }
+
+      .loading-spinner {
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #10b981;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .feature-card {
+        transition: all 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .location-button {
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+
+      .location-button:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-2px);
+      }
+
+      .scroll-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease-out;
+      }
+
+      .scroll-reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #pricing-table-body tr:nth-child(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      #pricing-table-body tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+
+      #pricing-table-body tr:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+
+      .section-separator {
+        margin: 1.5rem 0;
+        height: 1px;
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      /* Custom RTL styles */
+      .rtl-text-right {
+        text-align: right;
+      }
+
+      .rtl-text-left {
+        text-align: left;
+      }
+
+      .rtl-pl-2 {
+        padding-right: 0.5rem;
+        padding-left: 0;
+      }
+
+      .rtl-pr-2 {
+        padding-left: 0.5rem;
+        padding-right: 0;
+      }
+
+      .rtl-ml-2 {
+        margin-right: 0.5rem;
+        margin-left: 0;
+      }
+
+      .rtl-mr-2 {
+        margin-left: 0.5rem;
+        margin-right: 0;
+      }
+
+      .rtl-border-r {
+        border-left: 1px solid #e5e7eb;
+        border-right: none;
+      }
+
+      .rtl-flex-row-reverse {
+        flex-direction: row-reverse;
+      }
+
+      .rtl-space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+        --tw-space-x-reverse: 1;
+        margin-left: calc(0.5rem * var(--tw-space-x-reverse));
+        margin-right: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+      }
+
+      .rtl-space-x-4 > :not([hidden]) ~ :not([hidden]) {
+        --tw-space-x-reverse: 1;
+        margin-left: calc(1rem * var(--tw-space-x-reverse));
+        margin-right: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+      }
+
+      .rtl-divide-x > :not([hidden]) ~ :not([hidden]) {
+        --tw-divide-x-reverse: 1;
+        border-right-width: calc(1px * var(--tw-divide-x-reverse));
+        border-left-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
+      }
+
+      .rtl-breadcrumb li:not(:first-child):before {
+        content: "←";
+        margin: 0 8px;
+        transform: scaleX(-1);
+      }
+
+      /* Status badges */
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .housing-gallery {
+          grid-template-columns: 1fr;
+          grid-template-rows: 200px 1fr;
+          height: auto;
+        }
+
+        .apartment-selector {
+          width: 100%;
+          height: 200px;
+          flex-direction: row;
+          overflow-x: auto;
+          overflow-y: hidden;
+        }
+
+        .apartment-selector-btn {
+          min-width: 200px;
+          flex-shrink: 0;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav
+      class="bg-white/90 shadow-xl sticky top-0 z-50 border-b border-white/20"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-home text-green-700 text-2xl ml-2"></i>
+              <span class="text-xl font-bold text-gray-800">جوردن هوم</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a
+              href="index.html"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <i class="fas fa-home ml-1"></i> الرئيسية
+            </a>
+            <a
+              href="catalog.html"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <i class="fas fa-th-large ml-1"></i> الكتالوج
+            </a>
+            <a
+              href="dashboard.html"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <i class="fas fa-tachometer-alt ml-1"></i> لوحة التحكم
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Property Details Content -->
+    <div
+      id="property-details-content"
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    >
+      <!-- Loading State -->
+      <div id="loading-state" class="text-center py-16">
+        <div class="loading-spinner"></div>
+        <p class="text-gray-600 mt-4">
+          جاري تحميل تفاصيل العقار من قاعدة البيانات...
+        </p>
+      </div>
+
+      <!-- Property Not Found -->
+      <div id="not-found-state" class="text-center py-16 hidden">
+        <i class="fas fa-home text-6xl text-gray-300 mb-6"></i>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">العقار غير موجود</h2>
+        <p class="text-gray-600 mb-8">
+          العقار الذي تبحث عنه غير موجود أو تم حذفه.
+        </p>
+        <a
+          href="catalog.html"
+          class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg inline-block"
+        >
+          تصفح جميع العقارات
+        </a>
+      </div>
+
+      <!-- Property Details -->
+      <div id="property-content" class="hidden">
+        <!-- Breadcrumb -->
+        <nav class="mb-6">
+          <ol
+            class="flex items-center rtl-space-x-reverse text-sm text-gray-500 rtl-breadcrumb"
+          >
+            <li>
+              <a href="index.html" class="hover:text-green-700">الرئيسية</a>
+            </li>
+            <li>
+              <a href="catalog.html" class="hover:text-green-700">العقارات</a>
+            </li>
+            <li class="text-gray-900" id="breadcrumb-title">تفاصيل العقار</li>
+          </ol>
+        </nav>
+
+        <!-- Property Header -->
+        <div class="mb-8">
+          <div
+            class="flex justify-between items-start mb-4 rtl-flex-row-reverse"
+          >
+            <div>
+              <h1
+                id="property-title"
+                class="text-3xl font-bold text-gray-900 mb-2"
+              ></h1>
+              <div
+                class="flex items-center space-x-4 mb-2 rtl-flex-row-reverse"
+              >
+                <p
+                  id="property-location"
+                  class="text-gray-600 flex items-center text-lg"
+                >
+                  <i class="fas fa-map-marker-alt mx-2"></i>
+                </p>
+                <button
+                  id="map-location-btn"
+                  onclick="showLocationOnMap()"
+                  class="location-button text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 hidden"
+                >
+                  <i class="fas fa-map ml-1"></i>
+                  <span>عرض على الخريطة</span>
+                </button>
+              </div>
+            </div>
+            <div class="text-left">
+              <div class="flex items-center space-x-2 mb-2">
+                <span
+                  id="property-type"
+                  class="inline-block bg-green-100 mx-1 text-green-800 px-3 py-1 rounded-full text-sm font-medium"
+                ></span>
+                <span
+                  id="property-status"
+                  class="inline-block px-3 py-1 rounded-full text-sm font-medium text-white"
+                ></span>
+              </div>
+              <div
+                id="property-price"
+                class="text-3xl font-bold text-green-700"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Image Gallery -->
+        <div class="image-gallery-container mb-8">
+          <div id="image-gallery" class="rounded-lg overflow-hidden">
+            <!-- Dynamic content will be inserted here -->
+          </div>
+        </div>
+
+        <div class="section-separator"></div>
+
+        <!-- Property Details Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <!-- Property Information -->
+          <div class="lg:col-span-2">
+            <!-- Key Features -->
+            <div
+              class="modern-card bg-white rounded-lg shadow p-6 mb-6 scroll-reveal"
+            >
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                المميزات الرئيسية
+              </h2>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="feature-card bg-gray-50 p-4 rounded-lg text-center">
+                  <i class="fas fa-bed text-green-700 text-2xl mb-2"></i>
+                  <div class="text-sm text-gray-600">غرف النوم</div>
+                  <div id="bedrooms" class="text-xl font-semibold"></div>
+                </div>
+                <div class="feature-card bg-gray-50 p-4 rounded-lg text-center">
+                  <i class="fas fa-bath text-green-700 text-2xl mb-2"></i>
+                  <div class="text-sm text-gray-600">الحمامات</div>
+                  <div id="bathrooms" class="text-xl font-semibold"></div>
+                </div>
+                <div class="feature-card bg-gray-50 p-4 rounded-lg text-center">
+                  <i
+                    class="fas fa-ruler-combined text-green-700 text-2xl mb-2"
+                  ></i>
+                  <div class="text-sm text-gray-600">المساحة</div>
+                  <div id="area" class="text-xl font-semibold"></div>
+                </div>
+                <div class="feature-card bg-gray-50 p-4 rounded-lg text-center">
+                  <i class="fas fa-clock text-green-700 text-2xl mb-2"></i>
+                  <div class="text-sm text-gray-600">العمر</div>
+                  <div id="age" class="text-xl font-semibold"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-separator"></div>
+
+            <!-- Property Description -->
+            <div
+              class="modern-card bg-white rounded-lg shadow p-6 mb-6 scroll-reveal"
+            >
+              <h2 class="text-2xl font-bold text-gray-900 mb-4">الوصف</h2>
+              <p
+                id="property-description"
+                class="text-gray-700 leading-relaxed mb-4"
+              ></p>
+              <div class="border-t pt-4">
+                <h3 class="text-lg font-semibold mb-2">ملاحظات الوسيط</h3>
+                <p id="agent-comments" class="text-gray-600"></p>
+              </div>
+            </div>
+
+            <div class="section-separator"></div>
+
+            <!-- Property Details -->
+            <div
+              class="modern-card bg-white rounded-lg shadow p-6 mb-6 scroll-reveal"
+            >
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                تفاصيل العقار
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 class="text-lg font-semibold mb-4">معلومات عامة</h3>
+                  <div id="general-info" class="space-y-3"></div>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold mb-4">مميزات العقار</h3>
+                  <div id="property-features" class="space-y-3"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-separator"></div>
+
+            <!-- Floor Details -->
+            <div
+              class="modern-card bg-white rounded-lg shadow p-6 mb-6 scroll-reveal"
+            >
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                معلومات الطابق
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 class="text-lg font-semibold mb-4">تفاصيل الطابق</h3>
+                  <div id="floor-info" class="space-y-3"></div>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold mb-4">توزيع الغرف</h3>
+                  <div id="room-details" class="space-y-3"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-separator"></div>
+
+            <!-- Extra Rooms -->
+            <div
+              class="modern-card bg-white rounded-lg shadow p-6 scroll-reveal"
+            >
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                الغرف الإضافية
+              </h2>
+              <div
+                id="extra-rooms-info"
+                class="grid grid-cols-1 md:grid-cols-3 gap-4"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="lg:col-span-1">
+            <!-- Contact Information -->
+            <div
+              class="sidebar-section bg-white rounded-lg shadow p-6 mb-6 scroll-reveal"
+            >
+              <h3 class="text-lg font-semibold mb-4">معلومات التواصل</h3>
+              <div id="contact-info" class="space-y-4">
+                <div class="flex items-center">
+                  <i class="fas fa-user text-green-700 ml-3"></i>
+                  <div>
+                    <div class="font-medium" id="agent-name"></div>
+                    <div class="text-sm text-gray-600">وسيط عقاري</div>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-user-tie text-green-700 ml-3"></i>
+                  <div>
+                    <div class="font-medium" id="owner-name"></div>
+                    <div class="text-sm text-gray-600">مالك العقار</div>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-phone text-green-700 ml-3"></i>
+                  <div>
+                    <div class="font-medium" id="owner-phone"></div>
+                    <div class="text-sm text-gray-600">هاتف المالك</div>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-shield-alt text-green-700 ml-3"></i>
+                  <div>
+                    <div class="font-medium" id="guard-number"></div>
+                    <div class="text-sm text-gray-600">حارس العقار</div>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-percentage text-green-700 ml-3"></i>
+                  <div>
+                    <div class="font-medium" id="commission"></div>
+                    <div class="text-sm text-gray-600">العمولة</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-separator"></div>
+
+            <!-- Property Stats -->
+            <div
+              class="sidebar-section bg-white rounded-lg shadow p-6 mb-6 scroll-reveal"
+            >
+              <h3 class="text-lg font-semibold mb-4">معلومات العقار</h3>
+              <div id="property-stats" class="space-y-3"></div>
+            </div>
+
+            <div class="section-separator"></div>
+
+            <!-- Pricing Table - Only show for Housing type -->
+            <div
+              id="pricing-table-section"
+              class="sidebar-section bg-white rounded-lg shadow p-6 mb-6 scroll-reveal"
+            >
+              <h3 class="text-lg font-semibold mb-4">الأسعار حسب الطابق</h3>
+              <div class="overflow-x-auto">
+                <table id="pricing-table" class="min-w-full text-sm">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-3 py-2 text-right">الطابق</th>
+                      <th class="px-3 py-2 text-right">السعر 1</th>
+                      <th class="px-3 py-2 text-right">السعر 2</th>
+                      <th class="px-3 py-2 text-right">السعر 3</th>
+                      <th class="px-3 py-2 text-right">السعر 4</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pricing-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section-separator"></div>
+
+            <!-- Similar Properties -->
+            <div
+              class="sidebar-section bg-white rounded-lg shadow p-6 scroll-reveal"
+            >
+              <h3 class="text-lg font-semibold mb-4">عقارات مشابهة</h3>
+              <div id="similar-properties" class="space-y-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+      import {
+        getDatabase,
+        get,
+        ref,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBmnVjPWw6gtQ0tC6Jvd2JqLFPxvczWSC4",
+        authDomain: "jordanhomes-96a0c.firebaseapp.com",
+        databaseURL:
+          "https://jordanhomes-96a0c-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "jordanhomes-96a0c",
+        storageBucket: "jordanhomes-96a0c.appspot.com",
+        messagingSenderId: "650418495613",
+        appId: "1:650418495613:web:77bdff8abc5c42b8c3d114",
+        measurementId: "G-M8TMG1GF1C",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      // Get a reference to the database
+      const db = getDatabase(app);
+
+      // Global variables
+      let currentProperty = null;
+      let currentImages = [];
+      let currentMainImageIndex = 0;
+      let currentSelectedApartment = null;
+      let currentThumbnailOffset = 0;
+      let maxVisibleThumbnails = 6;
+      let currentApartmentImages = [];
+
+      // Initialize the application
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM loaded, initializing details page...");
+        loadPropertyFromFirebase();
+        setupScrollReveal();
+      });
+
+      // Get property ID from URL parameters
+      function getPropertyIdFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("id");
+      }
+
+      // Load specific property from Firebase using ID
+      function loadPropertyFromFirebase() {
+        // Get property ID from URL first
+        const selectedPropertyId = getPropertyIdFromURL();
+        console.log("Property ID from URL:", selectedPropertyId);
+
+        if (!selectedPropertyId) {
+          console.error("No property ID found in URL");
+          showNotFound();
+          return;
+        }
+
+        // Fetch only the specific property from Firebase
+        get(ref(db, `properties/${selectedPropertyId}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              console.log("📦 Property Data:", snapshot.val());
+              const property = snapshot.val();
+
+              // Convert pictures object to array if needed
+              if (
+                property.pictures &&
+                typeof property.pictures === "object" &&
+                !Array.isArray(property.pictures)
+              ) {
+                property.pictures = Object.values(property.pictures);
+              }
+
+              // Convert apartments object to array if needed
+              if (
+                property.apartments &&
+                typeof property.apartments === "object" &&
+                !Array.isArray(property.apartments)
+              ) {
+                const apartmentsArray = Object.values(property.apartments);
+
+                // Also convert pictures within each apartment from object to array
+                apartmentsArray.forEach((apartment) => {
+                  if (
+                    apartment.pictures &&
+                    typeof apartment.pictures === "object" &&
+                    !Array.isArray(apartment.pictures)
+                  ) {
+                    apartment.pictures = Object.values(apartment.pictures);
+                  }
+                });
+
+                property.apartments = apartmentsArray;
+              }
+
+              console.log("Processed property:", property);
+              console.log("Property apartments:", property.apartments);
+              if (property.apartments && property.apartments.length > 0) {
+                console.log(
+                  "First apartment pictures:",
+                  property.apartments[0].pictures
+                );
+              }
+
+              currentProperty = property;
+              renderPropertyDetails(property);
+
+              // Load similar properties separately
+              loadSimilarProperties(property);
+
+              document.getElementById("loading-state").classList.add("hidden");
+              document
+                .getElementById("property-content")
+                .classList.remove("hidden");
+            } else {
+              console.log("❌ Property not found with ID:", selectedPropertyId);
+              showNotFound();
+            }
+          })
+          .catch((error) => {
+            console.error("❌ Error getting property data:", error);
+            showNotFound();
+          });
+      }
+
+      // Load similar properties for sidebar
+      function loadSimilarProperties(currentProperty) {
+        // Fetch all properties only for similar properties section
+        get(ref(db, "properties/"))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const firebaseData = snapshot.val();
+
+              // Convert to array and filter similar properties
+              const allProperties = Object.keys(firebaseData).map((key) => {
+                const property = firebaseData[key];
+
+                // Convert pictures object to array if needed
+                if (
+                  property.pictures &&
+                  typeof property.pictures === "object" &&
+                  !Array.isArray(property.pictures)
+                ) {
+                  property.pictures = Object.values(property.pictures);
+                }
+
+                // Convert apartments and their pictures if needed
+                if (
+                  property.apartments &&
+                  typeof property.apartments === "object" &&
+                  !Array.isArray(property.apartments)
+                ) {
+                  const apartmentsArray = Object.values(property.apartments);
+
+                  // Also convert pictures within each apartment from object to array
+                  apartmentsArray.forEach((apartment) => {
+                    if (
+                      apartment.pictures &&
+                      typeof apartment.pictures === "object" &&
+                      !Array.isArray(apartment.pictures)
+                    ) {
+                      apartment.pictures = Object.values(apartment.pictures);
+                    }
+                  });
+
+                  property.apartments = apartmentsArray;
+                }
+
+                return property;
+              });
+
+              renderSimilarProperties(currentProperty, allProperties);
+            } else {
+              console.log("No properties found for similar section");
+              document.getElementById("similar-properties").innerHTML =
+                '<p class="text-gray-500 text-sm">لم يتم العثور على عقارات مشابهة.</p>';
+            }
+          })
+          .catch((error) => {
+            console.error("❌ Error loading similar properties:", error);
+            document.getElementById("similar-properties").innerHTML =
+              '<p class="text-gray-500 text-sm">خطأ في تحميل العقارات المشابهة.</p>';
+          });
+      }
+
+      function showNotFound() {
+        document.getElementById("loading-state").classList.add("hidden");
+        document.getElementById("not-found-state").classList.remove("hidden");
+      }
+
+      // Setup scroll reveal animation
+      function setupScrollReveal() {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll(".scroll-reveal").forEach((el) => {
+          observer.observe(el);
+        });
+      }
+
+      // Enhanced image gallery functions with new layout
+      function setupImageGallery(images) {
+        currentImages = images || [];
+        currentMainImageIndex = 0;
+        currentThumbnailOffset = 0;
+
+        const gallery = document.getElementById("image-gallery");
+
+        // For Apartments (شقة) - Full width gallery
+        if (currentProperty.form_header.housing_type === "شقة") {
+          gallery.className = "apartment-gallery rounded-lg overflow-hidden";
+
+          // Handle case with no images
+          if (currentImages.length === 0) {
+            gallery.innerHTML = `
+              <div class="main-image">
+                <div class="w-full h-full no-image-placeholder">
+                  <div class="text-center">
+                    <i class="fas fa-image text-6xl text-gray-400 mb-4"></i>
+                    <div class="text-lg text-gray-500">لا توجد صور متاحة</div>
+                  </div>
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          gallery.innerHTML = `
+            <!-- Main image -->
+            <div class="main-image">
+              <button class="gallery-nav-btn prev" onclick="navigateMainImage(-1)"><i class="fas fa-chevron-right"></i></button>
+              <img id="main-displayed-image" src="${
+                currentImages[0]
+              }" alt="صورة العقار الرئيسية" onclick="openImageModal()">
+              <button class="gallery-nav-btn next" onclick="navigateMainImage(1)"><i class="fas fa-chevron-left"></i></button>
+              ${createGalleryIndicators(currentImages.length)}
+            </div>
+            
+            <!-- Thumbnails strip with navigation -->
+            <div class="thumbnails-strip">
+              ${
+                currentImages.length > maxVisibleThumbnails
+                  ? '<button class="gallery-nav-btn prev" onclick="navigateThumbnails(-1)"><i class="fas fa-chevron-right"></i></button>'
+                  : ""
+              }
+              <div id="thumbnails-container" class="thumbnails-container">
+                ${currentImages
+                  .map(
+                    (img, index) => `
+                  <div class="thumbnail ${
+                    index === 0 ? "active" : ""
+                  }" onclick="changeMainImage(${index})">
+                    <img src="${img}" alt="صورة العقار ${index + 1}">
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+              ${
+                currentImages.length > maxVisibleThumbnails
+                  ? '<button class="gallery-nav-btn next" onclick="navigateThumbnails(1)"><i class="fas fa-chevron-left"></i></button>'
+                  : ""
+              }
+            </div>
+          `;
+
+          updateThumbnailsDisplay();
+        }
+        // For Housing Complexes (اسكان)
+        else if (
+          currentProperty.form_header.housing_type === "اسكان" &&
+          currentProperty.apartments
+        ) {
+          console.log(
+            "Setting up housing gallery with apartments:",
+            currentProperty.apartments
+          );
+          gallery.className = "housing-gallery rounded-lg overflow-hidden";
+
+          gallery.innerHTML = `
+            <!-- Apartment selector on the left -->
+            <div id="apartment-selector" class="apartment-selector"></div>
+            
+            <!-- Main image and thumbnails on the right -->
+            <div class="main-image-container">
+              <!-- Main image -->
+              <div class="main-image">
+                <img id="main-displayed-image" src="" alt="صورة العقار الرئيسية" onclick="openCurrentApartmentImageModal()">
+              </div>
+              
+              <!-- Thumbnails strip with navigation -->
+              <div id="thumbnails-strip" class="thumbnails-strip">
+                <div id="thumbnails-container" class="thumbnails-container"></div>
+              </div>
+            </div>
+          `;
+
+          const apartmentSelector =
+            document.getElementById("apartment-selector");
+
+          // Add apartment buttons
+          currentProperty.apartments.forEach((apartment, index) => {
+            console.log(`Creating button for apartment ${index}:`, apartment);
+            const apartmentBtn = document.createElement("button");
+            apartmentBtn.className =
+              index === 0
+                ? "apartment-selector-btn active"
+                : "apartment-selector-btn";
+            apartmentBtn.innerHTML = `
+              <div class="font-medium">${apartment.title}</div>
+              <div class="text-sm text-gray-600">الطابق ${apartment.floor}</div>
+              <div class="flex justify-between items-center mt-1">
+                <span class="text-sm">${parseInt(
+                  apartment.price || 0
+                ).toLocaleString("ar-JO")} دينار</span>
+                <span class="status-badge ${getStatusClass(
+                  apartment.status
+                )}">${apartment.status}</span>
+              </div>
+            `;
+            apartmentBtn.onclick = () => selectApartment(apartment);
+            apartmentSelector.appendChild(apartmentBtn);
+          });
+
+          // Select first apartment by default
+          if (currentProperty.apartments.length > 0) {
+            console.log(
+              "Selecting first apartment by default:",
+              currentProperty.apartments[0]
+            );
+            selectApartment(currentProperty.apartments[0]);
+          }
+        }
+      }
+
+      // Create gallery indicator dots
+      function createGalleryIndicators(imageCount) {
+        if (imageCount <= 1) return "";
+
+        let indicators = '<div class="gallery-indicators">';
+        for (let i = 0; i < imageCount; i++) {
+          indicators += `<div class="gallery-dot ${
+            i === 0 ? "active" : ""
+          }" onclick="changeMainImage(${i})"></div>`;
+        }
+        indicators += "</div>";
+        return indicators;
+      }
+
+      // Create gallery indicators for apartments
+      function createApartmentGalleryIndicators(imageCount) {
+        if (imageCount <= 1) return "";
+
+        let indicators = '<div class="gallery-indicators">';
+        for (let i = 0; i < imageCount; i++) {
+          indicators += `<div class="gallery-dot ${
+            i === 0 ? "active" : ""
+          }" onclick="changeApartmentMainImage(${i})"></div>`;
+        }
+        indicators += "</div>";
+        return indicators;
+      }
+
+      // Navigate main image (circular navigation)
+      window.navigateMainImage = function (direction) {
+        if (currentImages.length === 0) return;
+
+        // Circular navigation
+        if (direction === 1) {
+          currentMainImageIndex =
+            (currentMainImageIndex + 1) % currentImages.length;
+        } else {
+          currentMainImageIndex =
+            currentMainImageIndex === 0
+              ? currentImages.length - 1
+              : currentMainImageIndex - 1;
+        }
+
+        // Update main image
+        document.getElementById("main-displayed-image").src =
+          currentImages[currentMainImageIndex];
+
+        // Update active thumbnail
+        document.querySelectorAll(".thumbnail").forEach((thumb, i) => {
+          if (i === currentMainImageIndex) {
+            thumb.classList.add("active");
+          } else {
+            thumb.classList.remove("active");
+          }
+        });
+
+        // Update gallery indicators
+        document.querySelectorAll(".gallery-dot").forEach((dot, i) => {
+          if (i === currentMainImageIndex) {
+            dot.classList.add("active");
+          } else {
+            dot.classList.remove("active");
+          }
+        });
+
+        // Center the active thumbnail in view
+        centerActiveThumbnail();
+      };
+
+      // Navigate thumbnails for apartments (when more than maxVisibleThumbnails)
+      window.navigateThumbnails = function (direction) {
+        const maxOffset = Math.max(
+          0,
+          currentImages.length - maxVisibleThumbnails
+        );
+        currentThumbnailOffset = Math.max(
+          0,
+          Math.min(maxOffset, currentThumbnailOffset + direction)
+        );
+        updateThumbnailsDisplay();
+      };
+
+      // Center the active thumbnail in view
+      function centerActiveThumbnail() {
+        const container = document.getElementById("thumbnails-container");
+        if (!container) return;
+
+        const thumbnailWidth = 130; // 120px width + 10px gap
+        const containerWidth = container.parentElement.offsetWidth;
+        const visibleThumbnails = Math.floor(containerWidth / thumbnailWidth);
+
+        // Calculate optimal offset to center the active thumbnail
+        let targetOffset =
+          currentMainImageIndex - Math.floor(visibleThumbnails / 2);
+        targetOffset = Math.max(
+          0,
+          Math.min(currentImages.length - visibleThumbnails, targetOffset)
+        );
+
+        currentThumbnailOffset = targetOffset;
+        updateThumbnailsDisplay();
+      }
+
+      // Update thumbnails display position
+      function updateThumbnailsDisplay() {
+        const container = document.getElementById("thumbnails-container");
+        if (container) {
+          const translateX = currentThumbnailOffset * -130; // 120px width + 10px gap
+          container.style.transform = `translateX(${translateX}px)`;
+        }
+      }
+
+      // Select apartment in housing complex
+      function selectApartment(apartment) {
+        console.log("Selecting apartment:", apartment);
+        currentSelectedApartment = apartment;
+        currentApartmentImages = apartment.pictures || [];
+        console.log("Apartment pictures:", currentApartmentImages);
+        currentMainImageIndex = 0;
+        currentThumbnailOffset = 0;
+
+        // Update active button
+        document
+          .querySelectorAll(".apartment-selector-btn")
+          .forEach((btn, index) => {
+            if (currentProperty.apartments[index].id === apartment.id) {
+              btn.classList.add("active");
+            } else {
+              btn.classList.remove("active");
+            }
+          });
+
+        // Update main image and thumbnails
+        const mainImageContainer = document.querySelector(".main-image");
+        const thumbnailsContainer = document.getElementById(
+          "thumbnails-container"
+        );
+        const thumbnailsStrip = document.getElementById("thumbnails-strip");
+
+        // Clear previous thumbnails and navigation
+        thumbnailsContainer.innerHTML = "";
+        const existingNavBtns =
+          thumbnailsStrip.querySelectorAll(".gallery-nav-btn");
+        existingNavBtns.forEach((btn) => btn.remove());
+
+        if (currentApartmentImages.length > 0) {
+          // Update main image container with navigation and indicators
+          mainImageContainer.innerHTML = `
+            <button class="gallery-nav-btn prev" onclick="navigateApartmentMainImage(-1)"><i class="fas fa-chevron-right"></i></button>
+            <img id="main-displayed-image" src="${
+              currentApartmentImages[0]
+            }" alt="صورة العقار الرئيسية" onclick="openCurrentApartmentImageModal()">
+            <button class="gallery-nav-btn next" onclick="navigateApartmentMainImage(1)"><i class="fas fa-chevron-left"></i></button>
+            ${createApartmentGalleryIndicators(currentApartmentImages.length)}
+          `;
+
+          // Add thumbnail navigation if needed
+          if (currentApartmentImages.length > maxVisibleThumbnails) {
+            thumbnailsStrip.insertAdjacentHTML(
+              "afterbegin",
+              '<button class="gallery-nav-btn prev" onclick="navigateApartmentThumbnails(-1)"><i class="fas fa-chevron-right"></i></button>'
+            );
+            thumbnailsStrip.insertAdjacentHTML(
+              "beforeend",
+              '<button class="gallery-nav-btn next" onclick="navigateApartmentThumbnails(1)"><i class="fas fa-chevron-left"></i></button>'
+            );
+          }
+
+          // Add thumbnails for apartment
+          currentApartmentImages.forEach((img, index) => {
+            const thumbnailDiv = document.createElement("div");
+            thumbnailDiv.className =
+              index === 0 ? "thumbnail active" : "thumbnail";
+            thumbnailDiv.onclick = () => changeApartmentMainImage(index);
+            thumbnailDiv.innerHTML = `<img src="${img}" alt="صورة الشقة ${
+              index + 1
+            }">`;
+            thumbnailsContainer.appendChild(thumbnailDiv);
+          });
+
+          updateApartmentThumbnailsDisplay();
+        } else {
+          // Show no image placeholder
+          mainImageContainer.innerHTML = `
+            <div class="w-full h-full no-image-placeholder">
+              <div class="text-center">
+                <i class="fas fa-image text-6xl text-gray-400 mb-4"></i>
+                <div class="text-lg text-gray-500">لا توجد صور للشقة</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Navigate apartment main image (circular navigation)
+      window.navigateApartmentMainImage = function (direction) {
+        if (currentApartmentImages.length === 0) return;
+
+        // Circular navigation
+        if (direction === 1) {
+          currentMainImageIndex =
+            (currentMainImageIndex + 1) % currentApartmentImages.length;
+        } else {
+          currentMainImageIndex =
+            currentMainImageIndex === 0
+              ? currentApartmentImages.length - 1
+              : currentMainImageIndex - 1;
+        }
+
+        // Update main image
+        document.getElementById("main-displayed-image").src =
+          currentApartmentImages[currentMainImageIndex];
+
+        // Update active thumbnail
+        document.querySelectorAll(".thumbnail").forEach((thumb, i) => {
+          if (i === currentMainImageIndex) {
+            thumb.classList.add("active");
+          } else {
+            thumb.classList.remove("active");
+          }
+        });
+
+        // Update gallery indicators
+        document.querySelectorAll(".gallery-dot").forEach((dot, i) => {
+          if (i === currentMainImageIndex) {
+            dot.classList.add("active");
+          } else {
+            dot.classList.remove("active");
+          }
+        });
+
+        // Center the active thumbnail in view
+        centerApartmentActiveThumbnail();
+      };
+
+      // Navigate apartment thumbnails (when more than maxVisibleThumbnails)
+      window.navigateApartmentThumbnails = function (direction) {
+        if (!currentApartmentImages) return;
+
+        const maxOffset = Math.max(
+          0,
+          currentApartmentImages.length - maxVisibleThumbnails
+        );
+        currentThumbnailOffset = Math.max(
+          0,
+          Math.min(maxOffset, currentThumbnailOffset + direction)
+        );
+        updateApartmentThumbnailsDisplay();
+      };
+
+      // Center the active thumbnail in view for apartments
+      function centerApartmentActiveThumbnail() {
+        const container = document.getElementById("thumbnails-container");
+        if (!container || !currentApartmentImages) return;
+
+        const thumbnailWidth = 130; // 120px width + 10px gap
+        const containerWidth = container.parentElement.offsetWidth;
+        const visibleThumbnails = Math.floor(containerWidth / thumbnailWidth);
+
+        // Calculate optimal offset to center the active thumbnail
+        let targetOffset =
+          currentMainImageIndex - Math.floor(visibleThumbnails / 2);
+        targetOffset = Math.max(
+          0,
+          Math.min(
+            currentApartmentImages.length - visibleThumbnails,
+            targetOffset
+          )
+        );
+
+        currentThumbnailOffset = targetOffset;
+        updateApartmentThumbnailsDisplay();
+      }
+
+      // Update apartment thumbnails display position
+      function updateApartmentThumbnailsDisplay() {
+        const container = document.getElementById("thumbnails-container");
+        if (container) {
+          const translateX = currentThumbnailOffset * -130; // 120px width + 10px gap
+          container.style.transform = `translateX(${translateX}px)`;
+        }
+      }
+
+      // Change main image when apartment thumbnail is clicked
+      window.changeApartmentMainImage = function (index) {
+        currentMainImageIndex = index;
+        document.getElementById("main-displayed-image").src =
+          currentApartmentImages[index];
+
+        // Update active thumbnail
+        document.querySelectorAll(".thumbnail").forEach((thumb, i) => {
+          if (i === index) {
+            thumb.classList.add("active");
+          } else {
+            thumb.classList.remove("active");
+          }
+        });
+
+        // Update gallery indicators
+        document.querySelectorAll(".gallery-dot").forEach((dot, i) => {
+          if (i === index) {
+            dot.classList.add("active");
+          } else {
+            dot.classList.remove("active");
+          }
+        });
+
+        // Update onclick for modal
+        const mainImage = document.getElementById("main-displayed-image");
+        mainImage.onclick = () => openCurrentApartmentImageModal();
+      };
+
+      // Get status badge class
+      function getStatusClass(status) {
+        if (status === "متاح") return "status-available";
+        if (status === "محجوز") return "status-reserved";
+        if (status === "تم البيع") return "status-sold";
+        return "bg-gray-100 text-gray-800";
+      }
+
+      // Change main image when thumbnail is clicked (for apartments)
+      window.changeMainImage = function (index) {
+        currentMainImageIndex = index;
+        document.getElementById("main-displayed-image").src =
+          currentImages[index];
+
+        // Update active thumbnail
+        document.querySelectorAll(".thumbnail").forEach((thumb, i) => {
+          if (i === index) {
+            thumb.classList.add("active");
+          } else {
+            thumb.classList.remove("active");
+          }
+        });
+
+        // Update gallery indicators
+        document.querySelectorAll(".gallery-dot").forEach((dot, i) => {
+          if (i === index) {
+            dot.classList.add("active");
+          } else {
+            dot.classList.remove("active");
+          }
+        });
+
+        // Update onclick for modal
+        const mainImage = document.getElementById("main-displayed-image");
+        mainImage.onclick = () => openImageModal(currentMainImageIndex);
+      };
+
+      // Open image in modal for apartments
+      window.openImageModal = function (imageIndex) {
+        if (currentImages.length === 0) return;
+
+        Swal.fire({
+          imageUrl: currentImages[imageIndex || currentMainImageIndex],
+          imageAlt: `صورة العقار ${(imageIndex || currentMainImageIndex) + 1}`,
+          showCloseButton: true,
+          showConfirmButton: false,
+          width: "80%",
+          customClass: {
+            image: "rounded-lg",
+          },
+        });
+      };
+
+      // Open current apartment image modal
+      window.openCurrentApartmentImageModal = function () {
+        if (!currentApartmentImages || currentApartmentImages.length === 0)
+          return;
+
+        Swal.fire({
+          imageUrl: currentApartmentImages[currentMainImageIndex],
+          imageAlt: `صورة ${currentSelectedApartment.title} ${
+            currentMainImageIndex + 1
+          }`,
+          showCloseButton: true,
+          showConfirmButton: false,
+          width: "80%",
+          customClass: {
+            image: "rounded-lg",
+          },
+        });
+      };
+
+      // Enhanced map functionality to handle different location formats
+      window.showLocationOnMap = function () {
+        if (!currentProperty || !currentProperty.main_info.map_location) {
+          Swal.fire({
+            title: "لا توجد بيانات موقع",
+            text: "هذا العقار لا يحتوي على بيانات موقع.",
+            icon: "info",
+            confirmButtonColor: "#10b981",
+          });
+          return;
+        }
+
+        const locationString = currentProperty.main_info.map_location.trim();
+
+        // Try to handle different location formats
+        let searchQuery = locationString;
+
+        // Check if it's coordinates (lat, lng format)
+        const coordsMatch = locationString.match(
+          /(-?\d+\.?\d*),\s*(-?\d+\.?\d*)/
+        );
+        if (coordsMatch) {
+          const lat = parseFloat(coordsMatch[1]);
+          const lng = parseFloat(coordsMatch[2]);
+
+          if (
+            !isNaN(lat) &&
+            !isNaN(lng) &&
+            lat >= -90 &&
+            lat <= 90 &&
+            lng >= -180 &&
+            lng <= 180
+          ) {
+            searchQuery = `${lat},${lng}`;
+          }
+        }
+
+        // For any format (coordinates, plus codes, or text addresses), use Google Maps search
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          searchQuery
+        )}`;
+
+        // Open Google Maps in new tab
+        window.open(googleMapsUrl, "_blank");
+      };
+
+      function renderPropertyDetails(property) {
+        // Header information
+        document.getElementById("breadcrumb-title").textContent =
+          property.main_info.title;
+        document.getElementById("property-title").textContent =
+          property.main_info.title;
+        document.getElementById(
+          "property-location"
+        ).innerHTML = `<i class="fas fa-map-marker-alt mr-2"></i>${property.main_info.location}`;
+        document.getElementById("property-type").textContent =
+          property.form_header.housing_type === "شقة" ? "شقة" : "مجمع سكني";
+
+        // Set status badge
+        const statusElement = document.getElementById("property-status");
+        statusElement.textContent = property.status;
+        if (property.status === "متاح") {
+          statusElement.classList.add("bg-green-500");
+        } else if (property.status === "محجوز") {
+          statusElement.classList.add("bg-yellow-500");
+        } else if (property.status === "تم البيع") {
+          statusElement.classList.add("bg-red-500");
+        } else {
+          statusElement.classList.add("bg-gray-500");
+        }
+
+        document.getElementById("property-price").textContent = `${parseInt(
+          property.main_info.price || 0
+        ).toLocaleString("ar-JO")} دينار أردني`;
+
+        // Show map button if location exists
+        if (
+          property.main_info.map_location &&
+          property.main_info.map_location.trim()
+        ) {
+          document
+            .getElementById("map-location-btn")
+            .classList.remove("hidden");
+        }
+
+        // Setup enhanced image gallery
+        setupImageGallery(property.pictures);
+
+        // Key features
+        document.getElementById("bedrooms").textContent =
+          property.details.rooms.number_of_rooms;
+        document.getElementById("bathrooms").textContent =
+          property.details.rooms.bathrooms;
+        document.getElementById(
+          "area"
+        ).textContent = `${property.main_info.area} م²`;
+        document.getElementById(
+          "age"
+        ).textContent = `${property.main_info.age} سنوات`;
+
+        // Description
+        document.getElementById("property-description").textContent =
+          property.additional_info.general_specifications;
+        document.getElementById("agent-comments").textContent =
+          property.additional_info.employee_comments;
+
+        // General information
+        const generalInfo = document.getElementById("general-info");
+        generalInfo.innerHTML = `
+        <div><span class="font-medium">معلم بارز:</span> ${
+          property.main_info.landmark || "غير محدد"
+        }</div>
+        <div><span class="font-medium">الحالة العامة:</span> ${
+          property.details.property_info.general_situation
+        }</div>
+        <div><span class="font-medium">مصعد:</span> ${
+          property.details.property_info.elevator
+        }</div>
+        <div><span class="font-medium">تدفئة:</span> ${
+          property.details.property_info.heating || "غير محدد"
+        }</div>
+        <div><span class="font-medium">إطلالة:</span> ${
+          property.details.property_info.view || "غير محدد"
+        }</div>
+        <div><span class="font-medium">مداخل:</span> ${
+          property.details.property_info.entrances || "غير محدد"
+        }</div>
+      `;
+
+        // Property features
+        const propertyFeatures = document.getElementById("property-features");
+        propertyFeatures.innerHTML = `
+        <div><span class="font-medium">مطبخ:</span> ${
+          property.details.property_info.Kitchen || "غير محدد"
+        }</div>
+        <div><span class="font-medium">كراجات:</span> ${
+          property.details.property_info.garages || "غير محدد"
+        }</div>
+        <div><span class="font-medium">مستودع:</span> ${
+          property.details.property_info.warehouse
+        }</div>
+        <div><span class="font-medium">حديقة/تراسات:</span> ${
+          property.details.property_info.garden_and_terraces || "غير محدد"
+        }</div>
+        <div><span class="font-medium">تصميم داخلي:</span> ${
+          property.details.property_info.interior_design || "غير محدد"
+        }</div>
+        <div><span class="font-medium">أرضيات:</span> ${
+          property.details.property_info.floors || "غير محدد"
+        }</div>
+        <div><span class="font-medium">تهوية:</span> ${
+          property.details.property_info.ventilation || "غير محدد"
+        }</div>
+        <div><span class="font-medium">زجاج:</span> ${
+          property.details.property_info.glass || "غير محدد"
+        }</div>
+        <div><span class="font-medium">إضاءة:</span> ${
+          property.details.property_info.lampshades || "غير محدد"
+        }</div>
+        <div><span class="font-medium">ماركات:</span> ${
+          property.details.property_info.brands || "غير محدد"
+        }</div>
+      `;
+
+        // Floor information
+        const floorInfo = document.getElementById("floor-info");
+        floorInfo.innerHTML = `
+        <div><span class="font-medium">رقم الطابق:</span> ${
+          property.details.floor.number
+        }</div>
+        <div><span class="font-medium">إجمالي الطوابق:</span> ${
+          property.details.floor.number_of_floor
+        }</div>
+        <div><span class="font-medium">${
+          property.form_header.housing_type === "شقة"
+            ? "رمز الشقة"
+            : "رمز المبنى"
+        }:</span> ${
+          property.details.floor.apartment_code ||
+          property.details.floor.building_code ||
+          "غير محدد"
+        }</div>
+        <div><span class="font-medium">${
+          property.form_header.housing_type === "شقة"
+            ? "شقق في الطابق"
+            : "شقق في المبنى"
+        }:</span> ${
+          property.details.floor.apartments_on_the_floor || "غير محدد"
+        }</div>
+      `;
+
+        // Room details
+        const roomDetails = document.getElementById("room-details");
+        roomDetails.innerHTML = `
+        <div><span class="font-medium">إجمالي الغرف:</span> ${property.details.rooms.number_of_rooms}</div>
+        <div><span class="font-medium">غرف رئيسية:</span> ${property.details.rooms.matser}</div>
+        <div><span class="font-medium">حمامات:</span> ${property.details.rooms.bathrooms}</div>
+        <div><span class="font-medium">غرف معيشة:</span> ${property.details.rooms.living}</div>
+      `;
+
+        // Extra rooms
+        const extraRoomsInfo = document.getElementById("extra-rooms-info");
+        extraRoomsInfo.innerHTML = `
+        <div class="bg-gray-50 p-4 rounded-lg text-center">
+          <i class="fas fa-tools text-green-700 text-xl mb-2"></i>
+          <div class="text-sm text-gray-600">غرفة خدمة</div>
+          <div class="font-semibold">${
+            property.details.extra_rooms.service_room === "1" ? "نعم" : "لا"
+          }</div>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-lg text-center">
+          <i class="fas fa-tshirt text-green-700 text-xl mb-2"></i>
+          <div class="text-sm text-gray-600">غرفة غسيل</div>
+          <div class="font-semibold">${
+            property.details.extra_rooms.laundry_room === "1" ? "نعم" : "لا"
+          }</div>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-lg text-center">
+          <i class="fas fa-archive text-green-700 text-xl mb-2"></i>
+          <div class="text-sm text-gray-600">غرفة تخزين</div>
+          <div class="font-semibold">${
+            property.details.extra_rooms.storage_room === "1" ? "نعم" : "لا"
+          }</div>
+        </div>
+      `;
+
+        // Contact information
+        document.getElementById("agent-name").textContent =
+          property.hosuing_information.seller_name || "غير محدد";
+        document.getElementById("owner-name").textContent =
+          property.hosuing_information.owner_name || "غير محدد";
+        document.getElementById("owner-phone").textContent =
+          property.hosuing_information.owner_phone || "غير محدد";
+        document.getElementById("guard-number").textContent =
+          property.hosuing_information.guard_number || "غير محدد";
+        document.getElementById("commission").textContent = `${
+          property.hosuing_information.commission || "0"
+        }%`;
+
+        // Property stats
+        const propertyStats = document.getElementById("property-stats");
+        propertyStats.innerHTML = `
+        <div class="flex justify-between">
+          <span class="text-gray-600">معرف العقار:</span>
+          <span class="font-medium">${property.form_header.serial_number}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">تاريخ الإدراج:</span>
+          <span class="font-medium">${new Date(
+            property.form_header.date
+          ).toLocaleDateString("ar-JO")}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">الشركة:</span>
+          <span class="font-medium">${property.form_header.company_name}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">نوع المستند:</span>
+          <span class="font-medium">${property.form_header.document_type}</span>
+        </div>
+      `;
+
+        // Hide pricing table for Apartment type
+        const pricingTableSection = document.getElementById(
+          "pricing-table-section"
+        );
+        if (property.form_header.housing_type === "شقة") {
+          pricingTableSection.style.display = "none";
+        } else {
+          pricingTableSection.style.display = "block";
+
+          // Pricing table
+          const pricingTableBody =
+            document.getElementById("pricing-table-body");
+          pricingTableBody.innerHTML = "";
+
+          if (property.pricing_table) {
+            // Handle both array format and object format
+            let pricingRows =
+              property.pricing_table.rows || property.pricing_table;
+
+            if (Array.isArray(pricingRows)) {
+              pricingRows.forEach((row) => {
+                // Only show rows that have at least one price value
+                const hasData =
+                  row.price_1 || row.price_2 || row.price_3 || row.price_4;
+                if (hasData) {
+                  const tr = document.createElement("tr");
+                  tr.innerHTML = `
+                  <td class="px-3 py-2 font-medium">${
+                    row.id ? row.id.toUpperCase() : ""
+                  }</td>
+                  <td class="px-3 py-2">${row.price_1 || "-"}</td>
+                  <td class="px-3 py-2">${row.price_2 || "-"}</td>
+                  <td class="px-3 py-2">${row.price_3 || "-"}</td>
+                  <td class="px-3 py-2">${row.price_4 || "-"}</td>
+                `;
+                  pricingTableBody.appendChild(tr);
+                }
+              });
+            } else if (typeof pricingRows === "object") {
+              // Handle object format
+              Object.keys(pricingRows).forEach((key) => {
+                const row = pricingRows[key];
+                const hasData =
+                  row.price_1 || row.price_2 || row.price_3 || row.price_4;
+                if (hasData) {
+                  const tr = document.createElement("tr");
+                  tr.innerHTML = `
+                  <td class="px-3 py-2 font-medium">${key.toUpperCase()}</td>
+                  <td class="px-3 py-2">${row.price_1 || "-"}</td>
+                  <td class="px-3 py-2">${row.price_2 || "-"}</td>
+                  <td class="px-3 py-2">${row.price_3 || "-"}</td>
+                  <td class="px-3 py-2">${row.price_4 || "-"}</td>
+                `;
+                  pricingTableBody.appendChild(tr);
+                }
+              });
+            }
+          }
+
+          // If no pricing data, show a message
+          if (pricingTableBody.children.length === 0) {
+            pricingTableBody.innerHTML = `
+            <tr>
+              <td colspan="5" class="px-3 py-4 text-center text-gray-500">لا توجد بيانات أسعار متاحة</td>
+            </tr>
+          `;
+          }
+        }
+      }
+
+      function renderSimilarProperties(currentProperty, allProperties) {
+        const similarProperties = allProperties
+          .filter(
+            (p) =>
+              p.id !== currentProperty.id &&
+              (p.main_info.location === currentProperty.main_info.location ||
+                p.form_header.housing_type ===
+                  currentProperty.form_header.housing_type)
+          )
+          .slice(0, 3);
+
+        const container = document.getElementById("similar-properties");
+        container.innerHTML = "";
+
+        if (similarProperties.length === 0) {
+          container.innerHTML =
+            '<p class="text-gray-500 text-sm">لم يتم العثور على عقارات مشابهة.</p>';
+          return;
+        }
+
+        similarProperties.forEach((property) => {
+          const propertyCard = document.createElement("div");
+          propertyCard.className =
+            "flex space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition duration-300 border border-transparent hover:border-green-200 rtl-flex-row-reverse";
+          propertyCard.onclick = () => viewPropertyDetails(property.id);
+
+          // Handle image display
+          let imageDisplay;
+          if (property.pictures && property.pictures.length > 0) {
+            imageDisplay = `<img src="${property.pictures[0]}" alt="${property.main_info.title}" class="w-16 h-16 object-cover rounded-lg">`;
+          } else {
+            imageDisplay = `<div class="w-16 h-16 rounded-lg no-image-placeholder">
+              <i class="fas fa-image text-gray-400"></i>
+            </div>`;
+          }
+
+          propertyCard.innerHTML = `
+          ${imageDisplay}
+          <div class="flex-1 min-w-0">
+            <h4 class="font-medium text-sm text-gray-900 truncate">${
+              property.main_info.title
+            }</h4>
+            <p class="text-xs text-gray-500 truncate">${
+              property.main_info.location
+            }</p>
+            <p class="text-sm font-semibold text-green-700">${parseInt(
+              property.main_info.price || 0
+            ).toLocaleString("ar-JO")} دينار أردني</p>
+            <span class="status-badge ${getStatusClass(property.status)}">${
+            property.status
+          }</span>
+          </div>
+        `;
+
+          container.appendChild(propertyCard);
+        });
+      }
+
+      // Navigate to property details with ID in URL
+      function viewPropertyDetails(id) {
+        const detailsUrl = `details.html?id=${encodeURIComponent(id)}`;
+        window.location.href = detailsUrl;
+      }
+    </script>
+  </body>
+</html>

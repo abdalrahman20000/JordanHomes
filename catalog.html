@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>جوردن هوم - تصفح العقارات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Tajawal", sans-serif;
+      }
+      .property-card {
+        transition: all 0.3s ease;
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      .property-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      }
+      .nav-link {
+        transition: all 0.3s ease;
+      }
+      .nav-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+      }
+      .nav-link.active {
+        background: linear-gradient(135deg, #065f46, #10b981);
+        color: white;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      }
+      .filter-card {
+        animation: fadeIn 0.6s ease-out;
+      }
+      .page-header {
+        animation: fadeIn 0.5s ease-out;
+      }
+      .results-footer {
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      .status-available {
+        background-color: #10b981;
+      }
+      .status-reserved {
+        background-color: #f59e0b;
+      }
+      .status-sold {
+        background-color: #ef4444;
+      }
+
+      .apartment-count {
+        color: white;
+        border-radius: 12px;
+        font-size: 12px;
+      }
+
+      .custom-select {
+        position: relative;
+      }
+      .custom-select select {
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9l6 6 6-6"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        padding-right: 40px;
+        text-align: right;
+      }
+
+      .loading-spinner {
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #10b981;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 40px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .property-card:nth-child(3n + 1) {
+        animation-delay: 0.1s;
+      }
+      .property-card:nth-child(3n + 2) {
+        animation-delay: 0.2s;
+      }
+      .property-card:nth-child(3n + 3) {
+        animation-delay: 0.3s;
+      }
+
+      .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .btn-hover {
+        transition: all 0.3s ease;
+      }
+      .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .filter-input {
+        transition: all 0.3s ease;
+      }
+      .filter-input:focus {
+        transform: scale(1.01);
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+      }
+
+      .section-title {
+        background: linear-gradient(135deg, #1f2937, #10b981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .page-bg {
+        background: linear-gradient(
+          135deg,
+          #f8fafc 0%,
+          #e2e8f0 50%,
+          #f1f5f9 100%
+        );
+        min-height: 100vh;
+      }
+
+      .scroll-reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease-out;
+      }
+
+      .scroll-reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      body[dir="rtl"] .fa-home,
+      body[dir="rtl"] .fa-th-large,
+      body[dir="rtl"] .fa-tachometer-alt,
+      body[dir="rtl"] .fa-filter,
+      body[dir="rtl"] .fa-search,
+      body[dir="rtl"] .fa-map-marker-alt,
+      body[dir="rtl"] .fa-dollar-sign,
+      body[dir="rtl"] .fa-calendar-alt {
+        margin-right: 0;
+        margin-left: 0.5rem;
+      }
+
+      body[dir="rtl"] .fa-star,
+      body[dir="rtl"] .fa-crown {
+        margin-left: 0.25rem;
+      }
+    </style>
+  </head>
+  <body class="page-bg">
+    <!-- Navigation -->
+    <nav
+      class="bg-white/90 shadow-xl sticky top-0 z-50 border-b border-white/20"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-home text-green-700 text-2xl ml-2"></i>
+              <span class="text-xl font-bold text-gray-800">جوردن هوم</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a
+              href="index.html"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              الرئيسية <i class="fas fa-home ml-1"></i>
+            </a>
+            <a
+              href="catalog.html"
+              class="nav-link active px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              الكتالوج <i class="fas fa-th-large ml-1"></i>
+            </a>
+            <a
+              href="dashboard.html"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              لوحة التحكم <i class="fas fa-tachometer-alt ml-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Catalog Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+      <div
+        class="flex justify-between items-center mb-12 page-header scroll-reveal"
+      >
+        <div>
+          <h1 class="section-title h-16 text-4xl md:text-5xl font-bold mb-4">
+            كتالوج العقارات
+          </h1>
+          <p class="text-gray-600 text-lg">
+            تصفح جميع العقارات السكنية المتاحة في عمان مع فلترة متقدمة
+          </p>
+        </div>
+      </div>
+
+      <!-- Enhanced Filters -->
+      <div
+        class="filter-card bg-white p-8 rounded-2xl shadow-lg mb-12 scroll-reveal"
+      >
+        <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <i class="fas fa-filter mr-3 text-green-600"></i>
+          تصفية العقارات
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-3">
+              <i class="fas fa-search mr-2"></i>بحث
+            </label>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="ابحث حسب العنوان، الموقع، أو الرقم التسلسلي..."
+              class="filter-input w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+            />
+          </div>
+          <div class="custom-select">
+            <label class="block text-sm font-medium text-gray-700 mb-3">
+              <i class="fas fa-map-marker-alt mr-2"></i>الموقع
+            </label>
+            <select
+              id="location-filter"
+              class="filter-input w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+            >
+              <option value="">جميع المواقع</option>
+            </select>
+          </div>
+          <div class="custom-select">
+            <label class="block text-sm font-medium text-gray-700 mb-3">
+              <i class="fas fa-dollar-sign mr-2"></i>نطاق السعر
+            </label>
+            <select
+              id="price-filter"
+              class="filter-input w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+            >
+              <option value="">أي سعر</option>
+              <option value="under-100k">أقل من 100,000 دينار</option>
+              <option value="over-100k">أكثر من 100,000 دينار</option>
+            </select>
+          </div>
+          <div class="custom-select">
+            <label class="block text-sm font-medium text-gray-700 mb-3">
+              <i class="fas fa-calendar-alt mr-2"></i>عمر العقار
+            </label>
+            <select
+              id="age-filter"
+              class="filter-input w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+            >
+              <option value="">أي عمر</option>
+              <option value="new">جديد (أقل من سنة)</option>
+              <option value="under-10">أقل من 10 سنوات</option>
+              <option value="over-10">أكثر من 10 سنوات</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div
+        id="loading-catalog"
+        class="loading-spinner"
+        style="display: none"
+      ></div>
+
+      <!-- Properties Grid -->
+      <div class="scroll-reveal">
+        <div
+          id="catalog-properties-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+        ></div>
+      </div>
+
+      <!-- Results count -->
+      <div class="text-center results-footer scroll-reveal">
+        <p
+          id="results-count"
+          class="text-gray-600 text-lg font-medium bg-white rounded-full px-6 py-3 inline-block shadow-md border border-gray-200"
+        ></p>
+      </div>
+    </div>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+      import {
+        getDatabase,
+        get,
+        ref,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBmnVjPWw6gtQ0tC6Jvd2JqLFPxvczWSC4",
+        authDomain: "jordanhomes-96a0c.firebaseapp.com",
+        databaseURL:
+          "https://jordanhomes-96a0c-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "jordanhomes-96a0c",
+        storageBucket: "jordanhomes-96a0c.appspot.com",
+        messagingSenderId: "650418495613",
+        appId: "1:650418495613:web:77bdff8abc5c42b8c3d114",
+        measurementId: "G-M8TMG1GF1C",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      // Get a reference to the database
+      const db = getDatabase(app);
+
+      // Global variables
+      let properties = [];
+      let filteredProperties = [];
+
+      // Housing type translations
+      const housingTypeTranslations = {
+        Apartment: "شقة",
+        Villa: "فيلا",
+        House: "منزل",
+        Studio: "ستوديو",
+        Penthouse: "بنتهاوس",
+      };
+
+      // Initialize the application
+      document.addEventListener("DOMContentLoaded", function () {
+        loadPropertiesFromFirebase();
+        setupRealTimeFiltering();
+        handleSearchFromURL();
+        setupScrollReveal();
+      });
+
+      // Get main image based on property type
+      function getPropertyMainImage(property) {
+        const housingType = property.form_header
+          ? property.form_header.housing_type
+          : "";
+
+        if (housingType === "شقة") {
+          if (property.pictures && property.pictures.length > 0) {
+            return property.pictures[0];
+          }
+        } else if (housingType === "اسكان") {
+          if (property.apartments) {
+            const apartmentKeys = Object.keys(property.apartments);
+            if (apartmentKeys.length > 0) {
+              const firstApartment = property.apartments[apartmentKeys[0]];
+              if (firstApartment && firstApartment.pictures) {
+                if (
+                  Array.isArray(firstApartment.pictures) &&
+                  firstApartment.pictures.length > 0
+                ) {
+                  return firstApartment.pictures[0];
+                } else if (typeof firstApartment.pictures === "object") {
+                  const pictureValues = Object.values(firstApartment.pictures);
+                  if (pictureValues.length > 0) {
+                    return pictureValues[0];
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (property.pictures && property.pictures.length > 0) {
+          return property.pictures[0];
+        }
+
+        return null;
+      }
+
+      // Load properties from Firebase
+      function loadPropertiesFromFirebase() {
+        document.getElementById("loading-catalog").style.display = "block";
+
+        get(ref(db, "properties/"))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const firebaseData = snapshot.val();
+
+              properties = Object.keys(firebaseData).map((key) => {
+                const property = firebaseData[key];
+
+                if (
+                  property.pictures &&
+                  typeof property.pictures === "object" &&
+                  !Array.isArray(property.pictures)
+                ) {
+                  property.pictures = Object.values(property.pictures);
+                }
+
+                return property;
+              });
+
+              properties = properties.filter(
+                (property) => property.status !== "تم البيع"
+              );
+
+              filteredProperties = [...properties];
+
+              document.getElementById("loading-catalog").style.display = "none";
+
+              populateFilters();
+              renderCatalogProperties();
+              updateResultsCount();
+            } else {
+              document.getElementById("loading-catalog").style.display = "none";
+
+              document.getElementById("catalog-properties-grid").innerHTML =
+                '<div class="col-span-full text-center text-gray-500 py-12"><i class="fas fa-home text-4xl mb-4"></i><br>لا توجد عقارات متاحة حالياً</div>';
+              updateResultsCount();
+            }
+          })
+          .catch((error) => {
+            document.getElementById("loading-catalog").style.display = "none";
+
+            document.getElementById("catalog-properties-grid").innerHTML =
+              '<div class="col-span-full text-center text-red-500 py-12"><i class="fas fa-exclamation-triangle text-4xl mb-4"></i><br>حدث خطأ في تحميل البيانات</div>';
+            updateResultsCount();
+          });
+      }
+
+      // Setup scroll reveal animation
+      function setupScrollReveal() {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll(".scroll-reveal").forEach((el) => {
+          observer.observe(el);
+        });
+      }
+
+      // Handle search parameter from URL (from home page)
+      function handleSearchFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get("search");
+        if (searchParam) {
+          document.getElementById("search-input").value = searchParam;
+          setTimeout(() => {
+            applyFilters();
+          }, 100);
+        }
+      }
+
+      // Enhanced property card rendering with premium badges and status
+      function renderPropertyCard(property) {
+        const mainImage = getPropertyMainImage(property);
+
+        let statusClass = "status-available";
+        if (property.status === "محجوز") statusClass = "status-reserved";
+        if (property.status === "تم البيع") statusClass = "status-sold";
+
+        const statusBadge = property.status
+          ? `<span class="absolute top-4 left-4 ${statusClass} text-white px-3 py-1 rounded-full text-xs font-semibold">${property.status}</span>`
+          : "";
+
+        const premiumBadge = property.premium
+          ? '<div class="absolute top-4 right-4"><span class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide shadow-md"><i class="fas fa-crown ml-1"></i>مميز</span></div>'
+          : "";
+
+        const featuredBadge = property.featured
+          ? '<div class="absolute top-4 right-4"><span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide shadow-md"><i class="fas fa-star ml-1"></i>مختار</span></div>'
+          : "";
+
+        const badge = property.premium ? premiumBadge : featuredBadge;
+
+        const housingType = property.form_header
+          ? property.form_header.housing_type
+          : "عقار";
+        const translatedHousingType =
+          housingTypeTranslations[housingType] || housingType;
+
+        const apartmentCount =
+          property.form_header &&
+          property.form_header.housing_type === "اسكان" &&
+          property.apartments
+            ? `<span class="apartment-count">  -  ${
+                Object.keys(property.apartments).length
+              } شقق</span>`
+            : "";
+
+        const title = property.main_info ? property.main_info.title : "عقار";
+        const location = property.main_info
+          ? property.main_info.location
+          : "الموقع غير محدد";
+        const price = property.main_info
+          ? parseInt(property.main_info.price || 0)
+          : 0;
+        const area = property.main_info ? property.main_info.area : "0";
+        const rooms =
+          property.details && property.details.rooms
+            ? property.details.rooms.number_of_rooms
+            : "0";
+        const bathrooms =
+          property.details && property.details.rooms
+            ? property.details.rooms.bathrooms
+            : "0";
+
+        // Image section - show placeholder if no image
+        const imageSection = mainImage
+          ? `<img src="${mainImage}" alt="${title}" class="w-full h-48 object-cover">`
+          : `<div class="w-full h-48 bg-gray-100 flex items-center justify-center">
+               <div class="text-center text-gray-400">
+                 <i class="fas fa-image text-4xl mb-2"></i>
+                 <p class="text-sm">لا توجد صورة</p>
+               </div>
+             </div>`;
+
+        return `
+                <div class="property-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer group border border-gray-100 hover:border-green-200" onclick="viewPropertyDetails('${
+                  property.id
+                }')">
+                    <div class="relative overflow-hidden">
+                        ${imageSection}
+                        ${statusBadge}
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide shadow-md">
+                                ${translatedHousingType}
+                                ${apartmentCount}
+                            </span>
+                        </div>
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <div class="bg-white rounded-full p-3 shadow-md">
+                                <i class="fas fa-arrow-left text-green-600 text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-2xl font-bold text-green-700 mb-3">${price.toLocaleString(
+                          "ar-JO"
+                        )} <span class="text-sm text-gray-500 font-normal">دينار</span></div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">${title}</h3>
+                        <p class="text-gray-600 mb-4 flex items-center">
+                            <i class="fas fa-map-marker-alt ml-2 text-green-600"></i>
+                            <span class="truncate">${location}</span>
+                        </p>
+                        <div class="flex items-center justify-between text-gray-600 text-sm mb-6">
+                            <div class="flex items-center space-x-4">
+                                <span class="flex items-center mx-1">
+                                    ${rooms}
+                                    <i class="fas fa-bed ml-1 mx-1"></i>
+                                </span>
+                                <span class="flex items-center mx-1">
+                                    ${bathrooms}
+                                    <i class="fas fa-bath ml-1 mx-1"></i>
+                                </span>
+                                <span class="flex items-center mx-1">
+                                    ${area} متر²
+                                    <i class="fas fa-ruler-combined ml-1 mx-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <button class="btn-hover w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 px-4 rounded-lg font-medium">
+                            <i class="fas fa-eye ml-2"></i>عرض التفاصيل
+                        </button>
+                    </div>
+                </div>
+            `;
+      }
+
+      // Catalog page functions
+      function renderCatalogProperties() {
+        const grid = document.getElementById("catalog-properties-grid");
+
+        if (!filteredProperties || filteredProperties.length === 0) {
+          grid.innerHTML =
+            '<div class="col-span-full text-center text-gray-500 py-12"><i class="fas fa-search text-4xl mb-4"></i><br>لا توجد عقارات تطابق معايير البحث</div>';
+        } else {
+          grid.innerHTML = "";
+          filteredProperties.forEach((property) => {
+            grid.innerHTML += renderPropertyCard(property);
+          });
+        }
+        updateResultsCount();
+      }
+
+      function populateFilters() {
+        const locationFilter = document.getElementById("location-filter");
+        const locations = [
+          ...new Set(
+            properties
+              .map((p) => (p.main_info ? p.main_info.location : ""))
+              .filter((loc) => loc)
+          ),
+        ];
+
+        locationFilter.innerHTML = '<option value="">جميع المواقع</option>';
+        locations.forEach((location) => {
+          locationFilter.innerHTML += `<option value="${location}">${location}</option>`;
+        });
+      }
+
+      // Real-time filtering setup
+      function setupRealTimeFiltering() {
+        const searchInput = document.getElementById("search-input");
+        const locationFilter = document.getElementById("location-filter");
+        const priceFilter = document.getElementById("price-filter");
+        const ageFilter = document.getElementById("age-filter");
+
+        searchInput.addEventListener("input", applyFilters);
+        locationFilter.addEventListener("change", applyFilters);
+        priceFilter.addEventListener("change", applyFilters);
+        ageFilter.addEventListener("change", applyFilters);
+      }
+
+      // Enhanced search function that searches title, location, and serial_number
+      function searchInPropertyData(property, searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+
+        const searchableData = [
+          property.main_info ? property.main_info.title : "",
+          property.main_info ? property.main_info.location : "",
+          property.form_header ? property.form_header.serial_number : "",
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        return searchableData.includes(searchLower);
+      }
+
+      function applyFilters() {
+        const searchValue = document
+          .getElementById("search-input")
+          .value.toLowerCase()
+          .trim();
+        const locationFilter = document.getElementById("location-filter").value;
+        const priceFilter = document.getElementById("price-filter").value;
+        const ageFilter = document.getElementById("age-filter").value;
+
+        filteredProperties = [...properties];
+
+        if (searchValue) {
+          filteredProperties = filteredProperties.filter((property) =>
+            searchInPropertyData(property, searchValue)
+          );
+        }
+
+        if (locationFilter) {
+          filteredProperties = filteredProperties.filter(
+            (p) => p.main_info && p.main_info.location === locationFilter
+          );
+        }
+
+        if (priceFilter) {
+          filteredProperties = filteredProperties.filter((p) => {
+            const price = p.main_info ? parseInt(p.main_info.price || 0) : 0;
+            if (priceFilter === "under-100k") return price < 100000;
+            if (priceFilter === "over-100k") return price >= 100000;
+            return true;
+          });
+        }
+
+        if (ageFilter) {
+          filteredProperties = filteredProperties.filter((p) => {
+            const age = p.main_info ? parseInt(p.main_info.age || 0) : 0;
+            if (ageFilter === "new") return age < 1;
+            if (ageFilter === "under-10") return age < 10;
+            if (ageFilter === "over-10") return age >= 10;
+            return true;
+          });
+        }
+
+        renderCatalogProperties();
+      }
+
+      function updateResultsCount() {
+        const count = filteredProperties ? filteredProperties.length : 0;
+        let text = "";
+        if (count === 0) {
+          text = "لا توجد عقارات";
+        } else if (count === 1) {
+          text = "عرض عقار واحد";
+        } else if (count === 2) {
+          text = "عرض عقارين";
+        } else if (count <= 10) {
+          text = `عرض ${count} عقارات`;
+        } else {
+          text = `عرض ${count} عقار`;
+        }
+        document.getElementById("results-count").textContent = text;
+      }
+
+      window.viewPropertyDetails = function (id) {
+        if (!id) {
+          return;
+        }
+
+        const detailsUrl = `details.html?id=${encodeURIComponent(id)}`;
+        window.location.href = detailsUrl;
+      };
+    </script>
+  </body>
+</html>
