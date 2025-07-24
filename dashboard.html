@@ -59,7 +59,6 @@
       }
       .image-preview:hover img {
         border-color: #10b981;
-        transform: scale(1.02);
       }
       .image-preview .remove-image {
         position: absolute;
@@ -75,83 +74,9 @@
         justify-content: center;
         font-size: 12px;
         cursor: pointer;
-        z-index: 10;
       }
       .image-preview .remove-image:hover {
         background: #dc2626;
-      }
-
-      .optimization-badge {
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        font-size: 8px;
-        padding: 1px 4px;
-        border-radius: 4px;
-        font-weight: bold;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        z-index: 5;
-      }
-
-      .image-quality-settings {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 16px;
-      }
-
-      .quality-slider {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 3px;
-        background: #e2e8f0;
-        outline: none;
-        transition: background 0.3s;
-      }
-
-      .quality-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #10b981;
-        cursor: pointer;
-        transition: background 0.3s;
-      }
-
-      .quality-slider::-webkit-slider-thumb:hover {
-        background: #059669;
-      }
-
-      .quality-slider::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #10b981;
-        cursor: pointer;
-        border: none;
-      }
-
-      .optimization-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        margin-top: 8px;
-        font-size: 10px;
-        color: #6b7280;
-      }
-
-      .stat-item {
-        text-align: center;
-        padding: 4px;
-        background: #f9fafb;
-        border-radius: 4px;
       }
       .stats-card {
         background: rgba(255, 255, 255, 0.95);
@@ -1485,79 +1410,6 @@
                 صور الشقة
               </h4>
             </div>
-
-            <!-- Image Quality Settings -->
-            <div class="image-quality-settings">
-              <div class="flex items-center justify-between mb-3">
-                <label class="text-sm font-medium text-gray-700"
-                  >إعدادات تحسين الصور</label
-                >
-                <button
-                  type="button"
-                  onclick="toggleQualitySettings()"
-                  class="text-xs text-blue-600 hover:text-blue-800"
-                >
-                  <i class="fas fa-cog ml-1"></i>إعدادات متقدمة
-                </button>
-              </div>
-
-              <div id="quality-settings" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                  <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">
-                      جودة الصورة الرئيسية:
-                      <span id="main-quality-value">85%</span>
-                    </label>
-                    <input
-                      type="range"
-                      id="main-quality-slider"
-                      class="quality-slider"
-                      min="50"
-                      max="100"
-                      value="85"
-                      onchange="updateImageQuality('main', this.value)"
-                    />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">
-                      جودة الصور المصغرة:
-                      <span id="thumb-quality-value">75%</span>
-                    </label>
-                    <input
-                      type="range"
-                      id="thumb-quality-slider"
-                      class="quality-slider"
-                      min="50"
-                      max="90"
-                      value="75"
-                      onchange="updateImageQuality('thumb', this.value)"
-                    />
-                  </div>
-                </div>
-
-                <div class="flex items-center space-x-4 text-xs text-gray-600">
-                  <label class="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="auto-webp"
-                      checked
-                      class="mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500"
-                    />
-                    تحويل تلقائي إلى WebP (توفير أكبر)
-                  </label>
-                  <label class="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="progressive-jpeg"
-                      checked
-                      class="mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500"
-                    />
-                    JPEG تدريجي
-                  </label>
-                </div>
-              </div>
-            </div>
-
             <div class="mb-4">
               <label class="block text-sm font-medium text-gray-700 mb-2"
                 >رفع الصور</label
@@ -1569,36 +1421,9 @@
                 multiple
                 class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
-              <p class="text-sm text-gray-500 mt-1">
-                يمكنك اختيار عدة صور. سيتم تحسينها تلقائياً لتوفير مساحة التخزين
-                مع الحفاظ على الجودة.
-              </p>
+              <p class="text-sm text-gray-500 mt-1">يمكنك اختيار عدة صور</p>
             </div>
             <div id="apartment-image-previews" class="mt-4"></div>
-
-            <!-- Optimization Statistics -->
-            <div
-              id="optimization-stats"
-              class="hidden mt-4 p-4 bg-green-50 rounded-lg border border-green-200"
-            >
-              <h5 class="text-sm font-medium text-green-800 mb-2">
-                إحصائيات التحسين:
-              </h5>
-              <div class="optimization-stats">
-                <div class="stat-item">
-                  <div class="font-medium text-green-700">الصور</div>
-                  <div id="stats-count">0</div>
-                </div>
-                <div class="stat-item">
-                  <div class="font-medium text-green-700">التوفير</div>
-                  <div id="stats-savings">0%</div>
-                </div>
-                <div class="stat-item">
-                  <div class="font-medium text-green-700">الحجم</div>
-                  <div id="stats-size">0 KB</div>
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- Apartments Section (for complexes only) -->
@@ -3891,214 +3716,7 @@
         }
       }
 
-      // Advanced Image Optimization Functions
-      class ImageOptimizer {
-        constructor() {
-          this.maxFullSize = { width: 1920, height: 1080 };
-          this.maxThumbnailSize = { width: 800, height: 600 };
-          this.quality = 0.85; // 85% quality for good balance
-          this.thumbnailQuality = 0.75; // Lower quality for thumbnails
-        }
-
-        // Check if WebP is supported
-        supportsWebP() {
-          return new Promise((resolve) => {
-            const webP = new Image();
-            webP.onload = webP.onerror = () => {
-              resolve(webP.height === 2);
-            };
-            webP.src =
-              "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
-          });
-        }
-
-        // Calculate new dimensions while maintaining aspect ratio
-        calculateDimensions(
-          originalWidth,
-          originalHeight,
-          maxWidth,
-          maxHeight
-        ) {
-          let { width, height } = {
-            width: originalWidth,
-            height: originalHeight,
-          };
-
-          // If image is smaller than max dimensions, keep original size
-          if (width <= maxWidth && height <= maxHeight) {
-            return { width, height };
-          }
-
-          // Calculate scaling factor
-          const widthRatio = maxWidth / width;
-          const heightRatio = maxHeight / height;
-          const ratio = Math.min(widthRatio, heightRatio);
-
-          return {
-            width: Math.round(width * ratio),
-            height: Math.round(height * ratio),
-          };
-        }
-
-        // Optimize single image
-        async optimizeImage(file, isThumnail = false) {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-
-            img.onload = async () => {
-              try {
-                // Calculate optimal dimensions
-                const maxSize = isThumnail
-                  ? this.maxThumbnailSize
-                  : this.maxFullSize;
-                const { width, height } = this.calculateDimensions(
-                  img.width,
-                  img.height,
-                  maxSize.width,
-                  maxSize.height
-                );
-
-                // Set canvas size
-                canvas.width = width;
-                canvas.height = height;
-
-                // Enable image smoothing for better quality
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = "high";
-
-                // Draw resized image
-                ctx.drawImage(img, 0, 0, width, height);
-
-                // Determine output format and quality
-                const supportsWebP = await this.supportsWebP();
-                const outputFormat = supportsWebP ? "image/webp" : "image/jpeg";
-                const quality = isThumnail
-                  ? this.thumbnailQuality
-                  : this.quality;
-
-                // Convert to optimized format
-                const optimizedDataUrl = canvas.toDataURL(
-                  outputFormat,
-                  quality
-                );
-
-                // Calculate compression ratio
-                const originalSize = file.size;
-                const optimizedSize = this.getDataUrlSize(optimizedDataUrl);
-                const compressionRatio = (
-                  ((originalSize - optimizedSize) / originalSize) *
-                  100
-                ).toFixed(1);
-
-                resolve({
-                  dataUrl: optimizedDataUrl,
-                  originalSize,
-                  optimizedSize,
-                  compressionRatio,
-                  dimensions: { width, height },
-                  format: outputFormat,
-                });
-              } catch (error) {
-                reject(error);
-              }
-            };
-
-            img.onerror = () => reject(new Error("Failed to load image"));
-            img.src = URL.createObjectURL(file);
-          });
-        }
-
-        // Calculate data URL size in bytes
-        getDataUrlSize(dataUrl) {
-          const base64 = dataUrl.split(",")[1];
-          return Math.round(base64.length * 0.75); // Base64 overhead
-        }
-
-        // Batch optimize multiple images
-        async optimizeImages(files, onProgress = null) {
-          const results = [];
-          const total = files.length;
-
-          for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file.type.startsWith("image/")) {
-              try {
-                const optimized = await this.optimizeImage(file);
-                results.push(optimized);
-
-                if (onProgress) {
-                  onProgress(i + 1, total, optimized);
-                }
-              } catch (error) {
-                console.error(`Failed to optimize image ${file.name}:`, error);
-                // Fallback to original file as data URL
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                  results.push({
-                    dataUrl: e.target.result,
-                    originalSize: file.size,
-                    optimizedSize: file.size,
-                    compressionRatio: 0,
-                    dimensions: { width: "unknown", height: "unknown" },
-                    format: file.type,
-                  });
-                };
-                reader.readAsDataURL(file);
-              }
-            }
-          }
-
-          return results;
-        }
-
-        // Generate thumbnail from full image
-        async generateThumbnail(imageDataUrl) {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = async () => {
-              try {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-
-                const { width, height } = this.calculateDimensions(
-                  img.width,
-                  img.height,
-                  this.maxThumbnailSize.width,
-                  this.maxThumbnailSize.height
-                );
-
-                canvas.width = width;
-                canvas.height = height;
-
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = "high";
-                ctx.drawImage(img, 0, 0, width, height);
-
-                const supportsWebP = await this.supportsWebP();
-                const outputFormat = supportsWebP ? "image/webp" : "image/jpeg";
-                const thumbnailDataUrl = canvas.toDataURL(
-                  outputFormat,
-                  this.thumbnailQuality
-                );
-
-                resolve(thumbnailDataUrl);
-              } catch (error) {
-                reject(error);
-              }
-            };
-            img.onerror = () =>
-              reject(new Error("Failed to generate thumbnail"));
-            img.src = imageDataUrl;
-          });
-        }
-      }
-
-      // Initialize image optimizer
-      const imageOptimizer = new ImageOptimizer();
-
-      // Enhanced image upload handling with optimization
+      // Image upload handling
       function setupImageUpload() {
         const apartmentImageUpload = document.getElementById(
           "apartment-image-upload"
@@ -4111,383 +3729,38 @@
         }
       }
 
-      async function handleApartmentImageUpload(event) {
+      function handleApartmentImageUpload(event) {
         const files = Array.from(event.target.files);
 
         if (!Array.isArray(selectedImages)) {
           selectedImages = [];
         }
 
-        if (files.length === 0) return;
-
-        // Show optimization progress
-        showOptimizationProgress(files.length);
-
-        try {
-          const optimizedImages = await imageOptimizer.optimizeImages(
-            files,
-            (current, total, result) => {
-              updateOptimizationProgress(current, total, result);
-            }
-          );
-
-          // Add optimized images to selected images
-          optimizedImages.forEach((result, index) => {
-            selectedImages.push(result.dataUrl);
-            displayApartmentImagePreview(
-              result.dataUrl,
-              selectedImages.length - 1,
-              result
-            );
-          });
-
-          hideOptimizationProgress();
-
-          // Show optimization summary
-          showOptimizationSummary(optimizedImages);
-        } catch (error) {
-          console.error("Image optimization failed:", error);
-          hideOptimizationProgress();
-
-          // Fallback to original method
-          files.forEach((file) => {
-            if (file.type.startsWith("image/")) {
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                selectedImages.push(e.target.result);
-                displayApartmentImagePreview(
-                  e.target.result,
-                  selectedImages.length - 1
-                );
-              };
-              reader.readAsDataURL(file);
-            }
-          });
-        }
-      }
-
-      // Show optimization progress modal
-      function showOptimizationProgress(totalFiles) {
-        const progressHtml = `
-          <div id="optimization-progress" class="fixed inset-0 bg-gray-900/80 flex items-center justify-center z-[10000]">
-            <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
-              <div class="text-center">
-                <div class="mb-4">
-                  <i class="fas fa-image text-4xl text-green-600 mb-2"></i>
-                  <h3 class="text-lg font-semibold text-gray-900">تحسين الصور</h3>
-                  <p class="text-sm text-gray-600">جاري ضغط وتحسين جودة الصور...</p>
-                </div>
-                
-                <div class="mb-4">
-                  <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-blue-500 h-full transition-all duration-300" style="width: 0%"></div>
-                  </div>
-                  <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span id="progress-text">0 من ${totalFiles}</span>
-                    <span id="progress-percentage">0%</span>
-                  </div>
-                </div>
-                
-                <div id="current-optimization" class="text-xs text-gray-500">
-                  بدء التحسين...
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-
-        document.body.insertAdjacentHTML("beforeend", progressHtml);
-      }
-
-      function updateOptimizationProgress(current, total, result) {
-        const percentage = Math.round((current / total) * 100);
-
-        document.getElementById("progress-bar").style.width = `${percentage}%`;
-        document.getElementById(
-          "progress-text"
-        ).textContent = `${current} من ${total}`;
-        document.getElementById(
-          "progress-percentage"
-        ).textContent = `${percentage}%`;
-
-        const compressionInfo = `
-          توفير ${result.compressionRatio}% من الحجم
-          (${formatFileSize(result.originalSize)} → ${formatFileSize(
-          result.optimizedSize
-        )})
-        `;
-        document.getElementById("current-optimization").textContent =
-          compressionInfo;
-      }
-
-      function hideOptimizationProgress() {
-        const progressElement = document.getElementById(
-          "optimization-progress"
-        );
-        if (progressElement) {
-          progressElement.remove();
-        }
-      }
-
-      function formatFileSize(bytes) {
-        if (bytes === 0) return "0 Bytes";
-        const k = 1024;
-        const sizes = ["Bytes", "KB", "MB", "GB"];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-      }
-
-      // Image Quality Management Functions
-      function toggleQualitySettings() {
-        const settingsDiv = document.getElementById("quality-settings");
-        const isHidden = settingsDiv.classList.contains("hidden");
-
-        if (isHidden) {
-          settingsDiv.classList.remove("hidden");
-        } else {
-          settingsDiv.classList.add("hidden");
-        }
-      }
-
-      function updateImageQuality(type, value) {
-        const percentage = `${value}%`;
-
-        if (type === "main") {
-          document.getElementById("main-quality-value").textContent =
-            percentage;
-          imageOptimizer.quality = value / 100;
-        } else if (type === "thumb") {
-          document.getElementById("thumb-quality-value").textContent =
-            percentage;
-          imageOptimizer.thumbnailQuality = value / 100;
-        }
-      }
-
-      function updateOptimizationStats(images) {
-        if (!images || images.length === 0) {
-          document.getElementById("optimization-stats").classList.add("hidden");
-          return;
-        }
-
-        const totalOriginalSize = images.reduce(
-          (sum, img) => sum + img.originalSize,
-          0
-        );
-        const totalOptimizedSize = images.reduce(
-          (sum, img) => sum + img.optimizedSize,
-          0
-        );
-        const totalSavings =
-          totalOriginalSize > 0
-            ? (
-                ((totalOriginalSize - totalOptimizedSize) / totalOriginalSize) *
-                100
-              ).toFixed(1)
-            : 0;
-
-        document.getElementById("stats-count").textContent = images.length;
-        document.getElementById(
-          "stats-savings"
-        ).textContent = `${totalSavings}%`;
-        document.getElementById("stats-size").textContent =
-          formatFileSize(totalOptimizedSize);
-
-        document
-          .getElementById("optimization-stats")
-          .classList.remove("hidden");
-      }
-
-      // Bulk Image Operations
-      async function optimizeAllImages() {
-        if (
-          !selectedImages.length &&
-          !Object.keys(apartmentComplexImages).length
-        ) {
-          Swal.fire({
-            title: "لا توجد صور",
-            text: "لا توجد صور لتحسينها",
-            icon: "info",
-            confirmButtonColor: "#10b981",
-          });
-          return;
-        }
-
-        const result = await Swal.fire({
-          title: "تحسين جميع الصور",
-          text: "هل تريد إعادة تحسين جميع الصور بالإعدادات الحالية؟",
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonColor: "#10b981",
-          cancelButtonColor: "#6b7280",
-          confirmButtonText: "نعم، احسن",
-          cancelButtonText: "إلغاء",
-        });
-
-        if (!result.isConfirmed) return;
-
-        try {
-          showLoading();
-
-          // Re-optimize selected images
-          let allOptimizedImages = [];
-
-          // TODO: Implement bulk re-optimization logic
-          // This would require storing original files and re-processing them
-
-          hideLoading();
-
-          Swal.fire({
-            title: "تم التحسين!",
-            text: "تم تحسين جميع الصور بنجاح",
-            icon: "success",
-            confirmButtonColor: "#10b981",
-          });
-        } catch (error) {
-          hideLoading();
-          Swal.fire({
-            title: "خطأ في التحسين",
-            text: "فشل في تحسين الصور",
-            icon: "error",
-            confirmButtonColor: "#10b981",
-          });
-        }
-      }
-
-      // Enhanced image compression with different strategies
-      function getCompressionStrategy(fileSize, imageType) {
-        // Determine compression strategy based on file size and type
-        if (fileSize > 5 * 1024 * 1024) {
-          // > 5MB
-          return { quality: 0.7, maxDimension: 1920 };
-        } else if (fileSize > 2 * 1024 * 1024) {
-          // > 2MB
-          return { quality: 0.8, maxDimension: 1920 };
-        } else if (fileSize > 1 * 1024 * 1024) {
-          // > 1MB
-          return { quality: 0.85, maxDimension: 1920 };
-        } else {
-          return { quality: 0.9, maxDimension: 1920 };
-        }
-      }
-
-      // Image format detection and optimization
-      function detectOptimalFormat(file) {
-        const fileName = file.name.toLowerCase();
-
-        if (fileName.includes("screenshot") || fileName.includes("diagram")) {
-          return "image/png"; // Better for screenshots
-        } else if (fileName.includes("photo") || fileName.includes("camera")) {
-          return "image/jpeg"; // Better for photos
-        }
-
-        // Default based on original format
-        if (file.type === "image/png" && file.size < 500 * 1024) {
-          return "image/png"; // Keep PNG for small files
-        }
-
-        return "image/jpeg"; // Default to JPEG for most cases
-      }
-
-      // Progressive JPEG implementation
-      function createProgressiveJPEG(canvas, quality = 0.85) {
-        // Note: HTML5 Canvas doesn't directly support progressive JPEG
-        // This is a placeholder for the concept
-        return canvas.toDataURL("image/jpeg", quality);
-      }
-
-      // Lazy loading implementation for image previews
-      function setupLazyLoading() {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              const src = img.dataset.src;
-              if (src) {
-                img.src = src;
-                img.removeAttribute("data-src");
-                observer.unobserve(img);
-              }
-            }
-          });
-        });
-
-        // Observe all images with data-src attribute
-        document.querySelectorAll("img[data-src]").forEach((img) => {
-          imageObserver.observe(img);
+        files.forEach((file) => {
+          if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              selectedImages.push(e.target.result);
+              displayApartmentImagePreview(
+                e.target.result,
+                selectedImages.length - 1
+              );
+            };
+            reader.readAsDataURL(file);
+          }
         });
       }
 
-      // Image validation and error handling
-      function validateImage(file) {
-        const validTypes = [
-          "image/jpeg",
-          "image/jpg",
-          "image/png",
-          "image/webp",
-          "image/gif",
-        ];
-        const maxSize = 50 * 1024 * 1024; // 50MB limit
-
-        if (!validTypes.includes(file.type)) {
-          throw new Error(`نوع الملف غير مدعوم: ${file.type}`);
-        }
-
-        if (file.size > maxSize) {
-          throw new Error(`حجم الملف كبير جداً: ${formatFileSize(file.size)}`);
-        }
-
-        return true;
-      }
-
-      // Enhanced error handling for image processing
-      function handleImageError(error, fileName) {
-        console.error(`Image processing error for ${fileName}:`, error);
-
-        let errorMessage = "خطأ في معالجة الصورة";
-
-        if (error.message.includes("canvas")) {
-          errorMessage = "خطأ في معالجة الصورة - الملف قد يكون تالف";
-        } else if (error.message.includes("memory")) {
-          errorMessage = "الصورة كبيرة جداً للمعالجة";
-        } else if (error.message.includes("format")) {
-          errorMessage = "نوع الصورة غير مدعوم";
-        }
-
-        return errorMessage;
-      }
-
-      function displayApartmentImagePreview(
-        imageSrc,
-        index,
-        optimizationInfo = null
-      ) {
+      function displayApartmentImagePreview(imageSrc, index) {
         const imagePreviewsContainer = document.getElementById(
           "apartment-image-previews"
         );
 
         const previewDiv = document.createElement("div");
         previewDiv.className = "image-preview";
-
-        let optimizationBadge = "";
-        if (optimizationInfo) {
-          const savings = optimizationInfo.compressionRatio;
-          const badgeColor =
-            savings > 50
-              ? "bg-green-500"
-              : savings > 25
-              ? "bg-blue-500"
-              : "bg-gray-500";
-          optimizationBadge = `
-            <div class="absolute top-1 left-1 ${badgeColor} text-white text-xs px-1 py-0.5 rounded text-[10px] leading-tight">
-              -${savings}%
-            </div>
-          `;
-        }
-
         previewDiv.innerHTML = `
-          <img src="${imageSrc}" alt="Preview ${index + 1}" loading="lazy">
+          <img src="${imageSrc}" alt="Preview ${index + 1}">
           <div class="remove-image" onclick="removeApartmentImage(${index})">×</div>
-          ${optimizationBadge}
         `;
 
         imagePreviewsContainer.appendChild(previewDiv);
@@ -4517,69 +3790,34 @@
         }
       }
 
-      // Enhanced apartment image handling for complexes with optimization
-      async function handleApartmentComplexImageUpload(event, apartmentIndex) {
+      // Apartment image handling for complexes
+      function handleApartmentComplexImageUpload(event, apartmentIndex) {
         const files = Array.from(event.target.files);
 
         if (!apartmentComplexImages[apartmentIndex]) {
           apartmentComplexImages[apartmentIndex] = [];
         }
 
-        if (files.length === 0) return;
-
-        // Show optimization progress
-        showOptimizationProgress(files.length);
-
-        try {
-          const optimizedImages = await imageOptimizer.optimizeImages(
-            files,
-            (current, total, result) => {
-              updateOptimizationProgress(current, total, result);
-            }
-          );
-
-          // Add optimized images to apartment complex images
-          optimizedImages.forEach((result, fileIndex) => {
-            apartmentComplexImages[apartmentIndex].push(result.dataUrl);
-            displayApartmentComplexImagePreview(
-              result.dataUrl,
-              apartmentIndex,
-              apartmentComplexImages[apartmentIndex].length - 1,
-              result
-            );
-          });
-
-          hideOptimizationProgress();
-
-          // Show optimization summary
-          showOptimizationSummary(optimizedImages);
-        } catch (error) {
-          console.error("Complex apartment image optimization failed:", error);
-          hideOptimizationProgress();
-
-          // Fallback to original method
-          files.forEach((file) => {
-            if (file.type.startsWith("image/")) {
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                apartmentComplexImages[apartmentIndex].push(e.target.result);
-                displayApartmentComplexImagePreview(
-                  e.target.result,
-                  apartmentIndex,
-                  apartmentComplexImages[apartmentIndex].length - 1
-                );
-              };
-              reader.readAsDataURL(file);
-            }
-          });
-        }
+        files.forEach((file) => {
+          if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              apartmentComplexImages[apartmentIndex].push(e.target.result);
+              displayApartmentComplexImagePreview(
+                e.target.result,
+                apartmentIndex,
+                apartmentComplexImages[apartmentIndex].length - 1
+              );
+            };
+            reader.readAsDataURL(file);
+          }
+        });
       }
 
       function displayApartmentComplexImagePreview(
         imageSrc,
         apartmentIndex,
-        imageIndex,
-        optimizationInfo = null
+        imageIndex
       ) {
         const container = document.querySelector(
           `#apartment-${apartmentIndex} .apartment-images`
@@ -4588,29 +3826,11 @@
 
         const previewDiv = document.createElement("div");
         previewDiv.className = "apartment-image-preview";
-
-        let optimizationBadge = "";
-        if (optimizationInfo) {
-          const savings = optimizationInfo.compressionRatio;
-          const badgeColor =
-            savings > 50
-              ? "bg-green-500"
-              : savings > 25
-              ? "bg-blue-500"
-              : "bg-gray-500";
-          optimizationBadge = `
-            <div class="absolute top-0 left-0 ${badgeColor} text-white text-xs px-1 rounded text-[8px] leading-tight">
-              -${savings}%
-            </div>
-          `;
-        }
-
         previewDiv.innerHTML = `
           <img src="${imageSrc}" alt="Apartment ${apartmentIndex} Image ${
           imageIndex + 1
-        }" loading="lazy">
+        }">
           <div class="remove-apt-image" onclick="removeApartmentComplexImage(${apartmentIndex}, ${imageIndex})">×</div>
-          ${optimizationBadge}
         `;
 
         container.appendChild(previewDiv);
@@ -5355,12 +4575,6 @@
       window.setQuickDateFilter = setQuickDateFilter;
       window.applyDateFilter = applyDateFilter;
       window.applyFilters = applyFilters;
-
-      // Image optimization functions
-      window.toggleQualitySettings = toggleQualitySettings;
-      window.updateImageQuality = updateImageQuality;
-      window.optimizeAllImages = optimizeAllImages;
-      window.setupLazyLoading = setupLazyLoading;
     </script>
   </body>
 </html>
