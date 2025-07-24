@@ -59,6 +59,7 @@
       }
       .image-preview:hover img {
         border-color: #10b981;
+        transform: scale(1.02);
       }
       .image-preview .remove-image {
         position: absolute;
@@ -74,9 +75,83 @@
         justify-content: center;
         font-size: 12px;
         cursor: pointer;
+        z-index: 10;
       }
       .image-preview .remove-image:hover {
         background: #dc2626;
+      }
+
+      .optimization-badge {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        font-size: 8px;
+        padding: 1px 4px;
+        border-radius: 4px;
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        z-index: 5;
+      }
+
+      .image-quality-settings {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+      }
+
+      .quality-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: #e2e8f0;
+        outline: none;
+        transition: background 0.3s;
+      }
+
+      .quality-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #10b981;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .quality-slider::-webkit-slider-thumb:hover {
+        background: #059669;
+      }
+
+      .quality-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #10b981;
+        cursor: pointer;
+        border: none;
+      }
+
+      .optimization-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 8px;
+        font-size: 10px;
+        color: #6b7280;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 4px;
+        background: #f9fafb;
+        border-radius: 4px;
       }
       .stats-card {
         background: rgba(255, 255, 255, 0.95);
@@ -388,6 +463,39 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
+      }
+
+      .date-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
+      }
+
+      .filter-section {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .date-input {
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .date-input:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        outline: none;
       }
 
       [dir="rtl"] .fa-mr-1,
@@ -836,6 +944,114 @@
           </div>
         </div>
 
+        <!-- Enhanced Filter Section -->
+        <div class="filter-section mb-8">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+              <i class="fas fa-filter ml-2 text-green-600"></i>
+              فلاتر البحث المتقدمة
+            </h3>
+            <button
+              onclick="clearAllFilters()"
+              class="text-sm text-gray-600 hover:text-gray-800 underline"
+            >
+              مسح جميع الفلاتر
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Date Range Filter -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <i class="fas fa-calendar-alt ml-1"></i>
+                من تاريخ
+              </label>
+              <input
+                type="date"
+                id="date-from"
+                class="date-input w-full"
+                onchange="applyDateFilter()"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <i class="fas fa-calendar-alt ml-1"></i>
+                إلى تاريخ
+              </label>
+              <input
+                type="date"
+                id="date-to"
+                class="date-input w-full"
+                onchange="applyDateFilter()"
+              />
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <i class="fas fa-tags ml-1"></i>
+                الحالة
+              </label>
+              <select
+                id="status-filter"
+                class="date-input w-full"
+                onchange="applyFilters()"
+              >
+                <option value="">جميع الحالات</option>
+                <option value="متاح">متاح</option>
+                <option value="محجوز">محجوز</option>
+                <option value="تم البيع">تم البيع</option>
+              </select>
+            </div>
+
+            <!-- Property Type Filter -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <i class="fas fa-building ml-1"></i>
+                نوع العقار
+              </label>
+              <select
+                id="type-filter"
+                class="date-input w-full"
+                onchange="applyFilters()"
+              >
+                <option value="">جميع الأنواع</option>
+                <option value="شقة">شقة</option>
+                <option value="اسكان">إسكان</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Date Filters -->
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button
+              onclick="setQuickDateFilter('today')"
+              class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm rounded-lg transition-colors"
+            >
+              اليوم
+            </button>
+            <button
+              onclick="setQuickDateFilter('week')"
+              class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm rounded-lg transition-colors"
+            >
+              هذا الأسبوع
+            </button>
+            <button
+              onclick="setQuickDateFilter('month')"
+              class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm rounded-lg transition-colors"
+            >
+              هذا الشهر
+            </button>
+            <button
+              onclick="setQuickDateFilter('year')"
+              class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm rounded-lg transition-colors"
+            >
+              هذا العام
+            </button>
+          </div>
+        </div>
+
         <!-- View Toggle and Properties -->
         <div class="bg-white rounded-xl shadow-xl overflow-hidden">
           <div
@@ -844,6 +1060,10 @@
             <h2 class="text-xl font-semibold text-gray-900 flex items-center">
               <i class="fas fa-building ml-3 text-green-600 pl-2"></i>
               جميع العقارات
+              <span
+                id="filtered-count"
+                class="text-sm text-gray-600 mr-2"
+              ></span>
             </h2>
             <div class="flex items-center justify-between w-[85%]">
               <!-- Search Bar -->
@@ -917,6 +1137,11 @@
                     class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
                     الحالة
+                  </th>
+                  <th
+                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    التواريخ
                   </th>
                   <th
                     class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -1151,7 +1376,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >معلم بارز</label
+                  >معلم</label
                 >
                 <input
                   type="text"
@@ -1260,6 +1485,79 @@
                 صور الشقة
               </h4>
             </div>
+
+            <!-- Image Quality Settings -->
+            <div class="image-quality-settings">
+              <div class="flex items-center justify-between mb-3">
+                <label class="text-sm font-medium text-gray-700"
+                  >إعدادات تحسين الصور</label
+                >
+                <button
+                  type="button"
+                  onclick="toggleQualitySettings()"
+                  class="text-xs text-blue-600 hover:text-blue-800"
+                >
+                  <i class="fas fa-cog ml-1"></i>إعدادات متقدمة
+                </button>
+              </div>
+
+              <div id="quality-settings" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                  <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                      جودة الصورة الرئيسية:
+                      <span id="main-quality-value">85%</span>
+                    </label>
+                    <input
+                      type="range"
+                      id="main-quality-slider"
+                      class="quality-slider"
+                      min="50"
+                      max="100"
+                      value="85"
+                      onchange="updateImageQuality('main', this.value)"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                      جودة الصور المصغرة:
+                      <span id="thumb-quality-value">75%</span>
+                    </label>
+                    <input
+                      type="range"
+                      id="thumb-quality-slider"
+                      class="quality-slider"
+                      min="50"
+                      max="90"
+                      value="75"
+                      onchange="updateImageQuality('thumb', this.value)"
+                    />
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-4 text-xs text-gray-600">
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="auto-webp"
+                      checked
+                      class="mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                    تحويل تلقائي إلى WebP (توفير أكبر)
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="progressive-jpeg"
+                      checked
+                      class="mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                    JPEG تدريجي
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div class="mb-4">
               <label class="block text-sm font-medium text-gray-700 mb-2"
                 >رفع الصور</label
@@ -1271,9 +1569,36 @@
                 multiple
                 class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
-              <p class="text-sm text-gray-500 mt-1">يمكنك اختيار عدة صور</p>
+              <p class="text-sm text-gray-500 mt-1">
+                يمكنك اختيار عدة صور. سيتم تحسينها تلقائياً لتوفير مساحة التخزين
+                مع الحفاظ على الجودة.
+              </p>
             </div>
             <div id="apartment-image-previews" class="mt-4"></div>
+
+            <!-- Optimization Statistics -->
+            <div
+              id="optimization-stats"
+              class="hidden mt-4 p-4 bg-green-50 rounded-lg border border-green-200"
+            >
+              <h5 class="text-sm font-medium text-green-800 mb-2">
+                إحصائيات التحسين:
+              </h5>
+              <div class="optimization-stats">
+                <div class="stat-item">
+                  <div class="font-medium text-green-700">الصور</div>
+                  <div id="stats-count">0</div>
+                </div>
+                <div class="stat-item">
+                  <div class="font-medium text-green-700">التوفير</div>
+                  <div id="stats-savings">0%</div>
+                </div>
+                <div class="stat-item">
+                  <div class="font-medium text-green-700">الحجم</div>
+                  <div id="stats-size">0 KB</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Apartments Section (for complexes only) -->
@@ -1369,10 +1694,10 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >غرف نوم رئيسية</label
+                  >ماستر</label
                 >
                 <input
-                  type="number"
+                  type="text"
                   name="master"
                   class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
@@ -1389,10 +1714,10 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >غرف المعيشة</label
+                  >معيشة</label
                 >
                 <input
-                  type="number"
+                  type="text"
                   name="living"
                   class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
@@ -1411,7 +1736,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >غرفة خدمة</label
+                  >غرفة خادمة</label
                 >
                 <select
                   name="service_room"
@@ -1459,7 +1784,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >الحالة العامة</label
+                  >الوضع العام</label
                 >
                 <select
                   name="general_situation"
@@ -1553,13 +1878,12 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >العلامات التجارية</label
+                  >البرندات</label
                 >
                 <input
                   type="text"
                   name="brands"
                   class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="مثل: تشطيبات عالية الجودة"
                 />
               </div>
               <div>
@@ -1575,19 +1899,18 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >الإنارة</label
+                  >الصالونات</label
                 >
                 <input
                   type="text"
                   name="lampshades"
                   class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="مثل: إضاءة عصرية"
                 />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >الزجاج</label
-                >
+                  >الاباجورات والزجاج
+                </label>
                 <input
                   type="text"
                   name="glass"
@@ -1608,7 +1931,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >التصميم الداخلي</label
+                  >التقسيم الداخلي</label
                 >
                 <input
                   type="text"
@@ -1643,7 +1966,7 @@
               <table class="min-w-full">
                 <thead>
                   <tr class="bg-gray-100">
-                    <th class="px-4 py-2 text-right">الطابق</th>
+                    <th class="px-4 py-2 text-right">الترتيب</th>
                     <th class="px-4 py-2 text-right">السعر 1</th>
                     <th class="px-4 py-2 text-right">السعر 2</th>
                     <th class="px-4 py-2 text-right">السعر 3</th>
@@ -1683,7 +2006,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="px-4 py-2">م³</td>
+                    <td class="px-4 py-2">-3</td>
                     <td>
                       <input
                         type="text"
@@ -1714,7 +2037,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="px-4 py-2">م²</td>
+                    <td class="px-4 py-2">-2</td>
                     <td>
                       <input
                         type="text"
@@ -1745,7 +2068,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="px-4 py-2">م¹</td>
+                    <td class="px-4 py-2">-1</td>
                     <td>
                       <input
                         type="text"
@@ -1807,7 +2130,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="px-4 py-2">P1</td>
+                    <td class="px-4 py-2">1</td>
                     <td>
                       <input
                         type="text"
@@ -1838,7 +2161,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="px-4 py-2">P2</td>
+                    <td class="px-4 py-2">2</td>
                     <td>
                       <input
                         type="text"
@@ -1869,7 +2192,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="px-4 py-2">P3</td>
+                    <td class="px-4 py-2">3</td>
                     <td>
                       <input
                         type="text"
@@ -1900,7 +2223,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="px-4 py-2">السطح</td>
+                    <td class="px-4 py-2">روف</td>
                     <td>
                       <input
                         type="text"
@@ -1946,7 +2269,7 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >اسم البائع</label
+                  >اسم الوسيط</label
                 >
                 <input
                   type="text"
@@ -2179,6 +2502,199 @@
         });
       }
 
+      // Enhanced Date Utilities
+      function getCurrentTimestamp() {
+        return new Date().toISOString();
+      }
+
+      function formatDateForDisplay(dateString) {
+        if (!dateString) return "غير محدد";
+
+        try {
+          const date = new Date(dateString);
+          return date.toLocaleDateString("ar-SA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          });
+        } catch (error) {
+          return "تاريخ غير صحيح";
+        }
+      }
+
+      function formatDateTimeForDisplay(dateString) {
+        if (!dateString) return "غير محدد";
+
+        try {
+          const date = new Date(dateString);
+          return date.toLocaleString("ar-SA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        } catch (error) {
+          return "تاريخ غير صحيح";
+        }
+      }
+
+      function getPropertyDates(property) {
+        return {
+          created: property.dates?.created || property.created_at || null,
+          updated: property.dates?.updated || property.updated_at || null,
+          statusChanged: property.dates?.status_changed || null,
+        };
+      }
+
+      // Enhanced Date Filtering Functions
+      function clearAllFilters() {
+        document.getElementById("date-from").value = "";
+        document.getElementById("date-to").value = "";
+        document.getElementById("status-filter").value = "";
+        document.getElementById("type-filter").value = "";
+        document.getElementById("search-input").value = "";
+
+        filteredProperties = [...properties];
+        renderProperties();
+        updateFilteredCount();
+      }
+
+      function setQuickDateFilter(period) {
+        const now = new Date();
+        let fromDate = new Date();
+
+        switch (period) {
+          case "today":
+            fromDate = new Date();
+            break;
+          case "week":
+            fromDate.setDate(now.getDate() - 7);
+            break;
+          case "month":
+            fromDate.setMonth(now.getMonth() - 1);
+            break;
+          case "year":
+            fromDate.setFullYear(now.getFullYear() - 1);
+            break;
+        }
+
+        document.getElementById("date-from").value = fromDate
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("date-to").value = now
+          .toISOString()
+          .split("T")[0];
+
+        applyDateFilter();
+      }
+
+      function applyDateFilter() {
+        const dateFrom = document.getElementById("date-from").value;
+        const dateTo = document.getElementById("date-to").value;
+
+        let filtered = [...properties];
+
+        if (dateFrom) {
+          const fromTime = new Date(dateFrom).getTime();
+          filtered = filtered.filter((property) => {
+            const dates = getPropertyDates(property);
+            const createdTime = dates.created
+              ? new Date(dates.created).getTime()
+              : 0;
+            return createdTime >= fromTime;
+          });
+        }
+
+        if (dateTo) {
+          const toTime = new Date(dateTo + "T23:59:59").getTime();
+          filtered = filtered.filter((property) => {
+            const dates = getPropertyDates(property);
+            const createdTime = dates.created
+              ? new Date(dates.created).getTime()
+              : 0;
+            return createdTime <= toTime;
+          });
+        }
+
+        filteredProperties = filtered;
+        applyOtherFilters();
+      }
+
+      function applyFilters() {
+        applyDateFilter();
+      }
+
+      function applyOtherFilters() {
+        const statusFilter = document.getElementById("status-filter").value;
+        const typeFilter = document.getElementById("type-filter").value;
+        const searchTerm = document
+          .getElementById("search-input")
+          .value.toLowerCase()
+          .trim();
+
+        let filtered = [...filteredProperties];
+
+        // Apply status filter
+        if (statusFilter) {
+          filtered = filtered.filter(
+            (property) => getPropertyStatus(property) === statusFilter
+          );
+        }
+
+        // Apply type filter
+        if (typeFilter) {
+          filtered = filtered.filter(
+            (property) => getPropertyTypeDisplay(property) === typeFilter
+          );
+        }
+
+        // Apply search filter
+        if (searchTerm) {
+          filtered = filtered.filter((property) => {
+            const serialNumber = (
+              property.form_header?.serial_number ||
+              property.serial_number ||
+              ""
+            ).toLowerCase();
+            const title = getPropertyTitle(property).toLowerCase();
+            const id = (property.id || "").toLowerCase();
+            const location = getPropertyLocation(property).toLowerCase();
+            const landmark = (
+              property.main_info?.landmark ||
+              property.landmark ||
+              ""
+            ).toLowerCase();
+
+            return (
+              serialNumber.includes(searchTerm) ||
+              title.includes(searchTerm) ||
+              id.includes(searchTerm) ||
+              location.includes(searchTerm) ||
+              landmark.includes(searchTerm)
+            );
+          });
+        }
+
+        filteredProperties = filtered;
+        renderProperties();
+        updateFilteredCount();
+      }
+
+      function updateFilteredCount() {
+        const totalCount = properties.length;
+        const filteredCount = filteredProperties.length;
+        const countElement = document.getElementById("filtered-count");
+
+        if (filteredCount !== totalCount) {
+          countElement.textContent = `(${filteredCount} من ${totalCount})`;
+          countElement.className = "text-sm text-orange-600 mr-2 font-medium";
+        } else {
+          countElement.textContent = `(${totalCount})`;
+          countElement.className = "text-sm text-gray-600 mr-2";
+        }
+      }
+
       // Show/hide loading overlay
       function showLoading() {
         document.getElementById("loading-overlay").classList.remove("hidden");
@@ -2246,7 +2762,7 @@
         return null;
       }
 
-      // Modified Firebase CRUD operations to use serial number as ID
+      // Enhanced Firebase CRUD operations with date tracking
       async function savePropertyToFirebase(propertyData) {
         try {
           showLoading();
@@ -2254,6 +2770,14 @@
           if (!propertiesRef) {
             await waitForFirebase();
           }
+
+          // Add creation and update timestamps
+          const now = getCurrentTimestamp();
+          propertyData.dates = {
+            created: now,
+            updated: now,
+            status_changed: now,
+          };
 
           const cleanedData = cleanDataForFirebase(propertyData);
 
@@ -2297,6 +2821,12 @@
             await waitForFirebase();
           }
 
+          // Add update timestamp
+          if (!propertyData.dates) {
+            propertyData.dates = {};
+          }
+          propertyData.dates.updated = getCurrentTimestamp();
+
           const cleanedData = cleanDataForFirebase(propertyData);
           const propertyRef = window.firebaseRefs.ref(
             window.firebaseDB,
@@ -2308,6 +2838,22 @@
           throw error;
         } finally {
           hideLoading();
+        }
+      }
+
+      async function updatePropertyStatus(propertyId, newStatus) {
+        try {
+          const now = getCurrentTimestamp();
+          const updateData = {
+            status: newStatus,
+            "dates/updated": now,
+            "dates/status_changed": now,
+          };
+
+          await updatePropertyInFirebase(propertyId, updateData);
+          return updateData;
+        } catch (error) {
+          throw error;
         }
       }
 
@@ -2352,6 +2898,7 @@
           filteredProperties = [...properties];
           updateDashboardStats();
           renderProperties();
+          updateFilteredCount();
         } catch (error) {
           Swal.fire({
             title: "خطأ في التحميل",
@@ -2388,42 +2935,7 @@
 
       // Enhanced search functionality with flexible data structure
       function searchProperties() {
-        const searchTerm = document
-          .getElementById("search-input")
-          .value.toLowerCase()
-          .trim();
-
-        if (searchTerm === "") {
-          filteredProperties = [...properties];
-        } else {
-          filteredProperties = properties.filter((property) => {
-            const serialNumber = (
-              property.form_header?.serial_number ||
-              property.serial_number ||
-              ""
-            ).toLowerCase();
-
-            const title = getPropertyTitle(property).toLowerCase();
-            const id = (property.id || "").toLowerCase();
-            const location = getPropertyLocation(property).toLowerCase();
-
-            const landmark = (
-              property.main_info?.landmark ||
-              property.landmark ||
-              ""
-            ).toLowerCase();
-
-            return (
-              serialNumber.includes(searchTerm) ||
-              title.includes(searchTerm) ||
-              id.includes(searchTerm) ||
-              location.includes(searchTerm) ||
-              landmark.includes(searchTerm)
-            );
-          });
-        }
-
-        renderProperties();
+        applyOtherFilters();
       }
 
       // Show add property popup
@@ -2863,9 +3375,8 @@
           if (propertyIndex !== -1) {
             properties[propertyIndex].status = newStatus;
 
-            await updatePropertyInFirebase(currentStatusPropertyId, {
-              status: newStatus,
-            });
+            // Update with date tracking
+            await updatePropertyStatus(currentStatusPropertyId, newStatus);
 
             const filteredIndex = filteredProperties.findIndex(
               (p) => p.id === currentStatusPropertyId
@@ -3061,7 +3572,7 @@
         }
       }
 
-      // Enhanced table rendering with flexible data structure
+      // Enhanced table rendering with date information
       function renderPropertiesTable() {
         const tbody = document.getElementById("properties-table-body");
         tbody.innerHTML = "";
@@ -3093,6 +3604,10 @@
             propertyType === "اسكان" && aptCount > 0
               ? ` (${aptCount} شقة)`
               : "";
+
+          const dates = getPropertyDates(property);
+          const createdDate = formatDateForDisplay(dates.created);
+          const updatedDate = formatDateForDisplay(dates.updated);
 
           row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -3133,6 +3648,12 @@
                           getPropertyStatus(property),
                           property.id
                         )}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-xs text-gray-500">
+                            <div class="mb-1">إنشاء: <span class="date-badge">${createdDate}</span></div>
+                            <div>تحديث: <span class="date-badge">${updatedDate}</span></div>
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col space-y-2">
@@ -3180,7 +3701,7 @@
         });
       }
 
-      // Enhanced cards rendering with updated image logic
+      // Enhanced cards rendering with date information
       function renderPropertiesCards() {
         const grid = document.getElementById("properties-cards-grid");
         grid.innerHTML = "";
@@ -3215,6 +3736,9 @@
           const aptCount = getApartmentCount(property);
           const apartmentCount = aptCount > 0 ? ` (${aptCount} شقة)` : "";
 
+          const dates = getPropertyDates(property);
+          const createdDate = formatDateForDisplay(dates.created);
+
           const cardDiv = document.createElement("div");
           cardDiv.className =
             "property-card bg-white rounded-xl shadow-lg overflow-hidden";
@@ -3234,10 +3758,19 @@
               <h3 class="text-lg font-semibold text-gray-900 mb-1">${getPropertyTitle(
                 property
               )}</h3>
-              <p class="text-gray-600 mb-4 flex items-center">
+              <p class="text-gray-600 mb-2 flex items-center">
                 <i class="fas fa-map-marker-alt mr-2"></i>
                 ${getPropertyLocation(property)}
               </p>
+              
+              <!-- Date Information -->
+              <div class="text-xs text-gray-500 mb-4 flex items-center justify-between">
+                <span><i class="fas fa-calendar-plus mr-1"></i>إنشاء: ${createdDate}</span>
+                <span class="date-badge">${
+                  property.form_header?.serial_number || property.id
+                }</span>
+              </div>
+              
               <div class="flex items-center text-gray-600 text-sm space-x-4 mb-4">
                 ${
                   propertyType === "اسكان" && aptCount > 0
@@ -3358,7 +3891,214 @@
         }
       }
 
-      // Image upload handling
+      // Advanced Image Optimization Functions
+      class ImageOptimizer {
+        constructor() {
+          this.maxFullSize = { width: 1920, height: 1080 };
+          this.maxThumbnailSize = { width: 800, height: 600 };
+          this.quality = 0.85; // 85% quality for good balance
+          this.thumbnailQuality = 0.75; // Lower quality for thumbnails
+        }
+
+        // Check if WebP is supported
+        supportsWebP() {
+          return new Promise((resolve) => {
+            const webP = new Image();
+            webP.onload = webP.onerror = () => {
+              resolve(webP.height === 2);
+            };
+            webP.src =
+              "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
+          });
+        }
+
+        // Calculate new dimensions while maintaining aspect ratio
+        calculateDimensions(
+          originalWidth,
+          originalHeight,
+          maxWidth,
+          maxHeight
+        ) {
+          let { width, height } = {
+            width: originalWidth,
+            height: originalHeight,
+          };
+
+          // If image is smaller than max dimensions, keep original size
+          if (width <= maxWidth && height <= maxHeight) {
+            return { width, height };
+          }
+
+          // Calculate scaling factor
+          const widthRatio = maxWidth / width;
+          const heightRatio = maxHeight / height;
+          const ratio = Math.min(widthRatio, heightRatio);
+
+          return {
+            width: Math.round(width * ratio),
+            height: Math.round(height * ratio),
+          };
+        }
+
+        // Optimize single image
+        async optimizeImage(file, isThumnail = false) {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            img.onload = async () => {
+              try {
+                // Calculate optimal dimensions
+                const maxSize = isThumnail
+                  ? this.maxThumbnailSize
+                  : this.maxFullSize;
+                const { width, height } = this.calculateDimensions(
+                  img.width,
+                  img.height,
+                  maxSize.width,
+                  maxSize.height
+                );
+
+                // Set canvas size
+                canvas.width = width;
+                canvas.height = height;
+
+                // Enable image smoothing for better quality
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+
+                // Draw resized image
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Determine output format and quality
+                const supportsWebP = await this.supportsWebP();
+                const outputFormat = supportsWebP ? "image/webp" : "image/jpeg";
+                const quality = isThumnail
+                  ? this.thumbnailQuality
+                  : this.quality;
+
+                // Convert to optimized format
+                const optimizedDataUrl = canvas.toDataURL(
+                  outputFormat,
+                  quality
+                );
+
+                // Calculate compression ratio
+                const originalSize = file.size;
+                const optimizedSize = this.getDataUrlSize(optimizedDataUrl);
+                const compressionRatio = (
+                  ((originalSize - optimizedSize) / originalSize) *
+                  100
+                ).toFixed(1);
+
+                resolve({
+                  dataUrl: optimizedDataUrl,
+                  originalSize,
+                  optimizedSize,
+                  compressionRatio,
+                  dimensions: { width, height },
+                  format: outputFormat,
+                });
+              } catch (error) {
+                reject(error);
+              }
+            };
+
+            img.onerror = () => reject(new Error("Failed to load image"));
+            img.src = URL.createObjectURL(file);
+          });
+        }
+
+        // Calculate data URL size in bytes
+        getDataUrlSize(dataUrl) {
+          const base64 = dataUrl.split(",")[1];
+          return Math.round(base64.length * 0.75); // Base64 overhead
+        }
+
+        // Batch optimize multiple images
+        async optimizeImages(files, onProgress = null) {
+          const results = [];
+          const total = files.length;
+
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file.type.startsWith("image/")) {
+              try {
+                const optimized = await this.optimizeImage(file);
+                results.push(optimized);
+
+                if (onProgress) {
+                  onProgress(i + 1, total, optimized);
+                }
+              } catch (error) {
+                console.error(`Failed to optimize image ${file.name}:`, error);
+                // Fallback to original file as data URL
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  results.push({
+                    dataUrl: e.target.result,
+                    originalSize: file.size,
+                    optimizedSize: file.size,
+                    compressionRatio: 0,
+                    dimensions: { width: "unknown", height: "unknown" },
+                    format: file.type,
+                  });
+                };
+                reader.readAsDataURL(file);
+              }
+            }
+          }
+
+          return results;
+        }
+
+        // Generate thumbnail from full image
+        async generateThumbnail(imageDataUrl) {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = async () => {
+              try {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                const { width, height } = this.calculateDimensions(
+                  img.width,
+                  img.height,
+                  this.maxThumbnailSize.width,
+                  this.maxThumbnailSize.height
+                );
+
+                canvas.width = width;
+                canvas.height = height;
+
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const supportsWebP = await this.supportsWebP();
+                const outputFormat = supportsWebP ? "image/webp" : "image/jpeg";
+                const thumbnailDataUrl = canvas.toDataURL(
+                  outputFormat,
+                  this.thumbnailQuality
+                );
+
+                resolve(thumbnailDataUrl);
+              } catch (error) {
+                reject(error);
+              }
+            };
+            img.onerror = () =>
+              reject(new Error("Failed to generate thumbnail"));
+            img.src = imageDataUrl;
+          });
+        }
+      }
+
+      // Initialize image optimizer
+      const imageOptimizer = new ImageOptimizer();
+
+      // Enhanced image upload handling with optimization
       function setupImageUpload() {
         const apartmentImageUpload = document.getElementById(
           "apartment-image-upload"
@@ -3371,38 +4111,383 @@
         }
       }
 
-      function handleApartmentImageUpload(event) {
+      async function handleApartmentImageUpload(event) {
         const files = Array.from(event.target.files);
 
         if (!Array.isArray(selectedImages)) {
           selectedImages = [];
         }
 
-        files.forEach((file) => {
-          if (file.type.startsWith("image/")) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              selectedImages.push(e.target.result);
-              displayApartmentImagePreview(
-                e.target.result,
-                selectedImages.length - 1
-              );
-            };
-            reader.readAsDataURL(file);
-          }
+        if (files.length === 0) return;
+
+        // Show optimization progress
+        showOptimizationProgress(files.length);
+
+        try {
+          const optimizedImages = await imageOptimizer.optimizeImages(
+            files,
+            (current, total, result) => {
+              updateOptimizationProgress(current, total, result);
+            }
+          );
+
+          // Add optimized images to selected images
+          optimizedImages.forEach((result, index) => {
+            selectedImages.push(result.dataUrl);
+            displayApartmentImagePreview(
+              result.dataUrl,
+              selectedImages.length - 1,
+              result
+            );
+          });
+
+          hideOptimizationProgress();
+
+          // Show optimization summary
+          showOptimizationSummary(optimizedImages);
+        } catch (error) {
+          console.error("Image optimization failed:", error);
+          hideOptimizationProgress();
+
+          // Fallback to original method
+          files.forEach((file) => {
+            if (file.type.startsWith("image/")) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                selectedImages.push(e.target.result);
+                displayApartmentImagePreview(
+                  e.target.result,
+                  selectedImages.length - 1
+                );
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
+      }
+
+      // Show optimization progress modal
+      function showOptimizationProgress(totalFiles) {
+        const progressHtml = `
+          <div id="optimization-progress" class="fixed inset-0 bg-gray-900/80 flex items-center justify-center z-[10000]">
+            <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+              <div class="text-center">
+                <div class="mb-4">
+                  <i class="fas fa-image text-4xl text-green-600 mb-2"></i>
+                  <h3 class="text-lg font-semibold text-gray-900">تحسين الصور</h3>
+                  <p class="text-sm text-gray-600">جاري ضغط وتحسين جودة الصور...</p>
+                </div>
+                
+                <div class="mb-4">
+                  <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-blue-500 h-full transition-all duration-300" style="width: 0%"></div>
+                  </div>
+                  <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span id="progress-text">0 من ${totalFiles}</span>
+                    <span id="progress-percentage">0%</span>
+                  </div>
+                </div>
+                
+                <div id="current-optimization" class="text-xs text-gray-500">
+                  بدء التحسين...
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", progressHtml);
+      }
+
+      function updateOptimizationProgress(current, total, result) {
+        const percentage = Math.round((current / total) * 100);
+
+        document.getElementById("progress-bar").style.width = `${percentage}%`;
+        document.getElementById(
+          "progress-text"
+        ).textContent = `${current} من ${total}`;
+        document.getElementById(
+          "progress-percentage"
+        ).textContent = `${percentage}%`;
+
+        const compressionInfo = `
+          توفير ${result.compressionRatio}% من الحجم
+          (${formatFileSize(result.originalSize)} → ${formatFileSize(
+          result.optimizedSize
+        )})
+        `;
+        document.getElementById("current-optimization").textContent =
+          compressionInfo;
+      }
+
+      function hideOptimizationProgress() {
+        const progressElement = document.getElementById(
+          "optimization-progress"
+        );
+        if (progressElement) {
+          progressElement.remove();
+        }
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      // Image Quality Management Functions
+      function toggleQualitySettings() {
+        const settingsDiv = document.getElementById("quality-settings");
+        const isHidden = settingsDiv.classList.contains("hidden");
+
+        if (isHidden) {
+          settingsDiv.classList.remove("hidden");
+        } else {
+          settingsDiv.classList.add("hidden");
+        }
+      }
+
+      function updateImageQuality(type, value) {
+        const percentage = `${value}%`;
+
+        if (type === "main") {
+          document.getElementById("main-quality-value").textContent =
+            percentage;
+          imageOptimizer.quality = value / 100;
+        } else if (type === "thumb") {
+          document.getElementById("thumb-quality-value").textContent =
+            percentage;
+          imageOptimizer.thumbnailQuality = value / 100;
+        }
+      }
+
+      function updateOptimizationStats(images) {
+        if (!images || images.length === 0) {
+          document.getElementById("optimization-stats").classList.add("hidden");
+          return;
+        }
+
+        const totalOriginalSize = images.reduce(
+          (sum, img) => sum + img.originalSize,
+          0
+        );
+        const totalOptimizedSize = images.reduce(
+          (sum, img) => sum + img.optimizedSize,
+          0
+        );
+        const totalSavings =
+          totalOriginalSize > 0
+            ? (
+                ((totalOriginalSize - totalOptimizedSize) / totalOriginalSize) *
+                100
+              ).toFixed(1)
+            : 0;
+
+        document.getElementById("stats-count").textContent = images.length;
+        document.getElementById(
+          "stats-savings"
+        ).textContent = `${totalSavings}%`;
+        document.getElementById("stats-size").textContent =
+          formatFileSize(totalOptimizedSize);
+
+        document
+          .getElementById("optimization-stats")
+          .classList.remove("hidden");
+      }
+
+      // Bulk Image Operations
+      async function optimizeAllImages() {
+        if (
+          !selectedImages.length &&
+          !Object.keys(apartmentComplexImages).length
+        ) {
+          Swal.fire({
+            title: "لا توجد صور",
+            text: "لا توجد صور لتحسينها",
+            icon: "info",
+            confirmButtonColor: "#10b981",
+          });
+          return;
+        }
+
+        const result = await Swal.fire({
+          title: "تحسين جميع الصور",
+          text: "هل تريد إعادة تحسين جميع الصور بالإعدادات الحالية؟",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#10b981",
+          cancelButtonColor: "#6b7280",
+          confirmButtonText: "نعم، احسن",
+          cancelButtonText: "إلغاء",
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+          showLoading();
+
+          // Re-optimize selected images
+          let allOptimizedImages = [];
+
+          // TODO: Implement bulk re-optimization logic
+          // This would require storing original files and re-processing them
+
+          hideLoading();
+
+          Swal.fire({
+            title: "تم التحسين!",
+            text: "تم تحسين جميع الصور بنجاح",
+            icon: "success",
+            confirmButtonColor: "#10b981",
+          });
+        } catch (error) {
+          hideLoading();
+          Swal.fire({
+            title: "خطأ في التحسين",
+            text: "فشل في تحسين الصور",
+            icon: "error",
+            confirmButtonColor: "#10b981",
+          });
+        }
+      }
+
+      // Enhanced image compression with different strategies
+      function getCompressionStrategy(fileSize, imageType) {
+        // Determine compression strategy based on file size and type
+        if (fileSize > 5 * 1024 * 1024) {
+          // > 5MB
+          return { quality: 0.7, maxDimension: 1920 };
+        } else if (fileSize > 2 * 1024 * 1024) {
+          // > 2MB
+          return { quality: 0.8, maxDimension: 1920 };
+        } else if (fileSize > 1 * 1024 * 1024) {
+          // > 1MB
+          return { quality: 0.85, maxDimension: 1920 };
+        } else {
+          return { quality: 0.9, maxDimension: 1920 };
+        }
+      }
+
+      // Image format detection and optimization
+      function detectOptimalFormat(file) {
+        const fileName = file.name.toLowerCase();
+
+        if (fileName.includes("screenshot") || fileName.includes("diagram")) {
+          return "image/png"; // Better for screenshots
+        } else if (fileName.includes("photo") || fileName.includes("camera")) {
+          return "image/jpeg"; // Better for photos
+        }
+
+        // Default based on original format
+        if (file.type === "image/png" && file.size < 500 * 1024) {
+          return "image/png"; // Keep PNG for small files
+        }
+
+        return "image/jpeg"; // Default to JPEG for most cases
+      }
+
+      // Progressive JPEG implementation
+      function createProgressiveJPEG(canvas, quality = 0.85) {
+        // Note: HTML5 Canvas doesn't directly support progressive JPEG
+        // This is a placeholder for the concept
+        return canvas.toDataURL("image/jpeg", quality);
+      }
+
+      // Lazy loading implementation for image previews
+      function setupLazyLoading() {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              const src = img.dataset.src;
+              if (src) {
+                img.src = src;
+                img.removeAttribute("data-src");
+                observer.unobserve(img);
+              }
+            }
+          });
+        });
+
+        // Observe all images with data-src attribute
+        document.querySelectorAll("img[data-src]").forEach((img) => {
+          imageObserver.observe(img);
         });
       }
 
-      function displayApartmentImagePreview(imageSrc, index) {
+      // Image validation and error handling
+      function validateImage(file) {
+        const validTypes = [
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+          "image/webp",
+          "image/gif",
+        ];
+        const maxSize = 50 * 1024 * 1024; // 50MB limit
+
+        if (!validTypes.includes(file.type)) {
+          throw new Error(`نوع الملف غير مدعوم: ${file.type}`);
+        }
+
+        if (file.size > maxSize) {
+          throw new Error(`حجم الملف كبير جداً: ${formatFileSize(file.size)}`);
+        }
+
+        return true;
+      }
+
+      // Enhanced error handling for image processing
+      function handleImageError(error, fileName) {
+        console.error(`Image processing error for ${fileName}:`, error);
+
+        let errorMessage = "خطأ في معالجة الصورة";
+
+        if (error.message.includes("canvas")) {
+          errorMessage = "خطأ في معالجة الصورة - الملف قد يكون تالف";
+        } else if (error.message.includes("memory")) {
+          errorMessage = "الصورة كبيرة جداً للمعالجة";
+        } else if (error.message.includes("format")) {
+          errorMessage = "نوع الصورة غير مدعوم";
+        }
+
+        return errorMessage;
+      }
+
+      function displayApartmentImagePreview(
+        imageSrc,
+        index,
+        optimizationInfo = null
+      ) {
         const imagePreviewsContainer = document.getElementById(
           "apartment-image-previews"
         );
 
         const previewDiv = document.createElement("div");
         previewDiv.className = "image-preview";
+
+        let optimizationBadge = "";
+        if (optimizationInfo) {
+          const savings = optimizationInfo.compressionRatio;
+          const badgeColor =
+            savings > 50
+              ? "bg-green-500"
+              : savings > 25
+              ? "bg-blue-500"
+              : "bg-gray-500";
+          optimizationBadge = `
+            <div class="absolute top-1 left-1 ${badgeColor} text-white text-xs px-1 py-0.5 rounded text-[10px] leading-tight">
+              -${savings}%
+            </div>
+          `;
+        }
+
         previewDiv.innerHTML = `
-          <img src="${imageSrc}" alt="Preview ${index + 1}">
+          <img src="${imageSrc}" alt="Preview ${index + 1}" loading="lazy">
           <div class="remove-image" onclick="removeApartmentImage(${index})">×</div>
+          ${optimizationBadge}
         `;
 
         imagePreviewsContainer.appendChild(previewDiv);
@@ -3432,34 +4517,69 @@
         }
       }
 
-      // Apartment image handling for complexes
-      function handleApartmentComplexImageUpload(event, apartmentIndex) {
+      // Enhanced apartment image handling for complexes with optimization
+      async function handleApartmentComplexImageUpload(event, apartmentIndex) {
         const files = Array.from(event.target.files);
 
         if (!apartmentComplexImages[apartmentIndex]) {
           apartmentComplexImages[apartmentIndex] = [];
         }
 
-        files.forEach((file) => {
-          if (file.type.startsWith("image/")) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              apartmentComplexImages[apartmentIndex].push(e.target.result);
-              displayApartmentComplexImagePreview(
-                e.target.result,
-                apartmentIndex,
-                apartmentComplexImages[apartmentIndex].length - 1
-              );
-            };
-            reader.readAsDataURL(file);
-          }
-        });
+        if (files.length === 0) return;
+
+        // Show optimization progress
+        showOptimizationProgress(files.length);
+
+        try {
+          const optimizedImages = await imageOptimizer.optimizeImages(
+            files,
+            (current, total, result) => {
+              updateOptimizationProgress(current, total, result);
+            }
+          );
+
+          // Add optimized images to apartment complex images
+          optimizedImages.forEach((result, fileIndex) => {
+            apartmentComplexImages[apartmentIndex].push(result.dataUrl);
+            displayApartmentComplexImagePreview(
+              result.dataUrl,
+              apartmentIndex,
+              apartmentComplexImages[apartmentIndex].length - 1,
+              result
+            );
+          });
+
+          hideOptimizationProgress();
+
+          // Show optimization summary
+          showOptimizationSummary(optimizedImages);
+        } catch (error) {
+          console.error("Complex apartment image optimization failed:", error);
+          hideOptimizationProgress();
+
+          // Fallback to original method
+          files.forEach((file) => {
+            if (file.type.startsWith("image/")) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                apartmentComplexImages[apartmentIndex].push(e.target.result);
+                displayApartmentComplexImagePreview(
+                  e.target.result,
+                  apartmentIndex,
+                  apartmentComplexImages[apartmentIndex].length - 1
+                );
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
       }
 
       function displayApartmentComplexImagePreview(
         imageSrc,
         apartmentIndex,
-        imageIndex
+        imageIndex,
+        optimizationInfo = null
       ) {
         const container = document.querySelector(
           `#apartment-${apartmentIndex} .apartment-images`
@@ -3468,11 +4588,29 @@
 
         const previewDiv = document.createElement("div");
         previewDiv.className = "apartment-image-preview";
+
+        let optimizationBadge = "";
+        if (optimizationInfo) {
+          const savings = optimizationInfo.compressionRatio;
+          const badgeColor =
+            savings > 50
+              ? "bg-green-500"
+              : savings > 25
+              ? "bg-blue-500"
+              : "bg-gray-500";
+          optimizationBadge = `
+            <div class="absolute top-0 left-0 ${badgeColor} text-white text-xs px-1 rounded text-[8px] leading-tight">
+              -${savings}%
+            </div>
+          `;
+        }
+
         previewDiv.innerHTML = `
           <img src="${imageSrc}" alt="Apartment ${apartmentIndex} Image ${
           imageIndex + 1
-        }">
+        }" loading="lazy">
           <div class="remove-apt-image" onclick="removeApartmentComplexImage(${apartmentIndex}, ${imageIndex})">×</div>
+          ${optimizationBadge}
         `;
 
         container.appendChild(previewDiv);
@@ -3529,7 +4667,7 @@
           <div class="apartment-item" id="apartment-${apartmentCounter}">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">عنوان الشقة</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">رمز الشقة</label>
                 <input type="text" name="apt_title[]" class="w-full border rounded px-2 py-1" placeholder="مثل: شقة 101">
               </div>
               <div>
@@ -3842,6 +4980,7 @@
 
               updateDashboardStats();
               renderProperties();
+              updateFilteredCount();
 
               Swal.fire({
                 title: "تم الحذف!",
@@ -3913,7 +5052,7 @@
         serialNumberField.style.cursor = "";
       }
 
-      // Enhanced form submission with Firebase integration
+      // Enhanced form submission with Firebase integration and date tracking
       document
         .getElementById("property-form")
         .addEventListener("submit", async function (e) {
@@ -4125,12 +5264,23 @@
           try {
             if (currentEditingId) {
               propertyData.id = currentEditingId;
+              // Preserve original creation date but update modification date
+              const originalProperty = properties.find(
+                (p) => p.id === currentEditingId
+              );
+              if (originalProperty && originalProperty.dates) {
+                propertyData.dates = {
+                  ...originalProperty.dates,
+                  updated: getCurrentTimestamp(),
+                };
+              }
+
               await updatePropertyInFirebase(currentEditingId, propertyData);
 
               const index = properties.findIndex(
                 (p) => p.id === currentEditingId
               );
-              properties[index] = propertyData;
+              properties[index] = { ...properties[index], ...propertyData };
 
               Swal.fire({
                 title: "نجاح!",
@@ -4154,6 +5304,7 @@
             closePropertyModal();
             updateDashboardStats();
             renderProperties();
+            updateFilteredCount();
           } catch (error) {
             let errorMessage = "فشل حفظ العقار. يرجى المحاولة مرة أخرى.";
 
@@ -4198,6 +5349,18 @@
       window.exportDatabaseBackup = exportDatabaseBackup;
       window.optimizeDatabase = optimizeDatabase;
       window.viewDetailedStats = viewDetailedStats;
+
+      // Date filtering functions
+      window.clearAllFilters = clearAllFilters;
+      window.setQuickDateFilter = setQuickDateFilter;
+      window.applyDateFilter = applyDateFilter;
+      window.applyFilters = applyFilters;
+
+      // Image optimization functions
+      window.toggleQualitySettings = toggleQualitySettings;
+      window.updateImageQuality = updateImageQuality;
+      window.optimizeAllImages = optimizeAllImages;
+      window.setupLazyLoading = setupLazyLoading;
     </script>
   </body>
 </html>

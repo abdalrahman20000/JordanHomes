@@ -611,7 +611,7 @@
               <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="feature-card bg-gray-50 p-4 rounded-lg text-center">
                   <i class="fas fa-bed text-green-700 text-2xl mb-2"></i>
-                  <div class="text-sm text-gray-600">غرف النوم</div>
+                  <div class="text-sm text-gray-600">ماستر</div>
                   <div id="bedrooms" class="text-xl font-semibold"></div>
                 </div>
                 <div class="feature-card bg-gray-50 p-4 rounded-lg text-center">
@@ -1648,10 +1648,10 @@
         // General information
         const generalInfo = document.getElementById("general-info");
         generalInfo.innerHTML = `
-        <div><span class="font-medium">معلم بارز:</span> ${
+        <div><span class="font-medium">معلم :</span> ${
           property.main_info.landmark || "غير محدد"
         }</div>
-        <div><span class="font-medium">الحالة العامة:</span> ${
+        <div><span class="font-medium">الوضع العام:</span> ${
           property.details.property_info.general_situation
         }</div>
         <div><span class="font-medium">مصعد:</span> ${
@@ -1683,7 +1683,7 @@
         <div><span class="font-medium">حديقة/تراسات:</span> ${
           property.details.property_info.garden_and_terraces || "غير محدد"
         }</div>
-        <div><span class="font-medium">تصميم داخلي:</span> ${
+        <div><span class="font-medium">تقسيم داخلي:</span> ${
           property.details.property_info.interior_design || "غير محدد"
         }</div>
         <div><span class="font-medium">أرضيات:</span> ${
@@ -1695,10 +1695,10 @@
         <div><span class="font-medium">زجاج:</span> ${
           property.details.property_info.glass || "غير محدد"
         }</div>
-        <div><span class="font-medium">إضاءة:</span> ${
+        <div><span class="font-medium">صالونات:</span> ${
           property.details.property_info.lampshades || "غير محدد"
         }</div>
-        <div><span class="font-medium">ماركات:</span> ${
+        <div><span class="font-medium">برندات:</span> ${
           property.details.property_info.brands || "غير محدد"
         }</div>
       `;
@@ -1744,7 +1744,7 @@
         extraRoomsInfo.innerHTML = `
         <div class="bg-gray-50 p-4 rounded-lg text-center">
           <i class="fas fa-tools text-green-700 text-xl mb-2"></i>
-          <div class="text-sm text-gray-600">غرفة خدمة</div>
+          <div class="text-sm text-gray-600">غرفة خادمة</div>
           <div class="font-semibold">${
             property.details.extra_rooms.service_room === "1" ? "نعم" : "لا"
           }</div>
