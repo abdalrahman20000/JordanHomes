@@ -2,12 +2,83 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="manifest" href="/manifest.json" /> -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+
+    <!-- PWA Meta Tags -->
     <link rel="manifest" href="/JordanHomes/manifest.json" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#059669" />
+    <meta name="background-color" content="#ffffff" />
+
+    <!-- Mobile App Capabilities -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="جوردن هوم" />
+    <meta name="application-name" content="جوردن هوم" />
+
+    <!-- Prevent zoom -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"
+    />
+
+    <!-- iOS Safari specific -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <!-- App Icons for different sizes -->
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="/JordanHomes/icons/icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="/JordanHomes/icons/icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="/JordanHomes/icons/icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="/JordanHomes/icons/icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="/JordanHomes/icons/icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="/JordanHomes/icons/icon-120x120.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="/JordanHomes/icons/icon-144x144.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="/JordanHomes/icons/icon-152x152.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/JordanHomes/icons/icon-180x180.png"
+    />
+
     <title>جوردن هوم - ابحث عن منزلك المثالي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -22,7 +93,50 @@
     <style>
       body {
         font-family: "Tajawal", sans-serif;
+        /* Prevent scroll bounce on iOS */
+        overscroll-behavior: none;
+        /* Remove default margins */
+        margin: 0;
+        padding: 0;
+        /* Full height */
+        height: 100vh;
+        /* Prevent selection */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
+
+      /* Hide scrollbars but keep functionality */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+
+      /* Prevent touch highlighting */
+      * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+      }
+
+      /* Make sure inputs can still be selected */
+      input,
+      textarea {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+
+      /* Safe area padding for notched phones */
+      .safe-area-top {
+        padding-top: env(safe-area-inset-top);
+      }
+
+      .safe-area-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
       .property-card {
         transition: all 0.3s ease;
         opacity: 0;
@@ -167,12 +281,39 @@
           opacity: 1;
         }
       }
+
+      /* Install prompt styles */
+      .install-prompt {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #059669, #10b981);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: none;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateX(-50%) translateY(100px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(-50%) translateY(0);
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body class="bg-gray-50">
-    <!-- Navigation -->
+    <!-- Navigation with safe area -->
     <nav
-      class="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20"
+      class="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20 safe-area-top"
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -316,7 +457,7 @@
     </div>
 
     <!-- Premium Collection -->
-    <div class="bg-gray-100 py-20 relative scroll-reveal">
+    <div class="bg-gray-100 py-20 relative scroll-reveal safe-area-bottom">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-16">
           <div>
@@ -346,6 +487,23 @@
           id="premium-properties-grid"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         ></div>
+      </div>
+    </div>
+
+    <!-- Install App Prompt -->
+    <div id="installPrompt" class="install-prompt">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-download text-lg"></i>
+        <span class="font-medium">تثبيت التطبيق على جهازك</span>
+        <button
+          id="installBtn"
+          class="bg-white text-green-600 px-4 py-1 rounded-full text-sm font-semibold ml-2"
+        >
+          تثبيت
+        </button>
+        <button id="dismissBtn" class="text-white/80 hover:text-white ml-1">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
     </div>
 
@@ -384,18 +542,97 @@
       let carouselInterval = null;
       let currentCarouselIndex = 0;
       const totalSlides = 4;
+      let deferredPrompt;
+
+      // PWA Install prompt
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showInstallPrompt();
+      });
+
+      function showInstallPrompt() {
+        const installPrompt = document.getElementById("installPrompt");
+        const installBtn = document.getElementById("installBtn");
+        const dismissBtn = document.getElementById("dismissBtn");
+
+        // Don't show if already dismissed or installed
+        if (
+          localStorage.getItem("installDismissed") ||
+          window.matchMedia("(display-mode: standalone)").matches
+        ) {
+          return;
+        }
+
+        installPrompt.style.display = "block";
+
+        installBtn.addEventListener("click", async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === "accepted") {
+              console.log("User accepted the install prompt");
+            }
+            deferredPrompt = null;
+          }
+          installPrompt.style.display = "none";
+        });
+
+        dismissBtn.addEventListener("click", () => {
+          installPrompt.style.display = "none";
+          localStorage.setItem("installDismissed", "true");
+        });
+
+        // Auto hide after 10 seconds
+        setTimeout(() => {
+          if (installPrompt.style.display !== "none") {
+            installPrompt.style.display = "none";
+          }
+        }, 10000);
+      }
 
       // Initialize the application
       document.addEventListener("DOMContentLoaded", function () {
         setupSearchEnter();
         setupScrollReveal();
         loadPropertiesFromFirebase();
+        preventPullToRefresh();
 
         // Setup carousel with a small delay to ensure DOM is ready
         setTimeout(() => {
           setupCarousel();
         }, 100);
+
+        // Show install prompt after 3 seconds
+        setTimeout(showInstallPrompt, 3000);
       });
+
+      // Prevent pull to refresh on mobile
+      function preventPullToRefresh() {
+        let startY = 0;
+
+        document.addEventListener(
+          "touchstart",
+          (e) => {
+            startY = e.touches[0].clientY;
+          },
+          { passive: true }
+        );
+
+        document.addEventListener(
+          "touchmove",
+          (e) => {
+            const currentY = e.touches[0].clientY;
+            const scrollTop =
+              document.documentElement.scrollTop || document.body.scrollTop;
+
+            if (scrollTop === 0 && currentY > startY) {
+              e.preventDefault();
+            }
+          },
+          { passive: false }
+        );
+      }
 
       // Load properties from Firebase
       function loadPropertiesFromFirebase() {
