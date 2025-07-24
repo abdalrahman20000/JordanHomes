@@ -544,8 +544,11 @@
       const totalSlides = 4;
       let deferredPrompt;
 
-      // PWA Install prompt
+      // PWA Install prompt with debugging
+      let installPromptShown = false;
+
       window.addEventListener("beforeinstallprompt", (e) => {
+        console.log("beforeinstallprompt event fired");
         e.preventDefault();
         deferredPrompt = e;
         showInstallPrompt();
@@ -561,19 +564,43 @@
           localStorage.getItem("installDismissed") ||
           window.matchMedia("(display-mode: standalone)").matches
         ) {
+          console.log(
+            "Install prompt blocked: already dismissed or standalone mode"
+          );
           return;
         }
 
+        console.log("Showing install prompt");
         installPrompt.style.display = "block";
+        installPromptShown = true;
 
         installBtn.addEventListener("click", async () => {
+          console.log("Install button clicked");
+
           if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === "accepted") {
-              console.log("User accepted the install prompt");
+            console.log("Using deferredPrompt.prompt()");
+            try {
+              deferredPrompt.prompt();
+              const { outcome } = await deferredPrompt.userChoice;
+              console.log("Install outcome:", outcome);
+              if (outcome === "accepted") {
+                console.log("User accepted the install prompt");
+                alert(
+                  "تم تثبيت التطبيق بنجاح! يمكنك الآن العثور عليه على الشاشة الرئيسية."
+                );
+              } else {
+                console.log("User declined the install prompt");
+              }
+              deferredPrompt = null;
+            } catch (error) {
+              console.error("Error during install prompt:", error);
+              showManualInstructions();
             }
-            deferredPrompt = null;
+          } else {
+            console.log(
+              "No deferredPrompt available, showing manual instructions"
+            );
+            showManualInstructions();
           }
           installPrompt.style.display = "none";
         });
@@ -581,15 +608,95 @@
         dismissBtn.addEventListener("click", () => {
           installPrompt.style.display = "none";
           localStorage.setItem("installDismissed", "true");
+          console.log("Install prompt dismissed");
         });
 
-        // Auto hide after 10 seconds
+        // Auto hide after 15 seconds
         setTimeout(() => {
           if (installPrompt.style.display !== "none") {
             installPrompt.style.display = "none";
           }
-        }, 10000);
+        }, 15000);
       }
+
+      function showManualInstructions() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isAndroid = /Android/.test(navigator.userAgent);
+
+        let instructions = "";
+
+        if (isIOS) {
+          instructions = `
+            لتثبيت التّطبيق على iPhone/iPad:
+            
+            1️⃣ اضغط على زر المشاركة (⬆️) في أسفل المتصفح
+            2️⃣ اختر "إضافة إلى الشاشة الرئيسية"
+            3️⃣ اضغط "إضافة" في الزاوية العلوية
+            
+            سيظهر التطبيق على شاشتك الرئيسية! 📱
+          `;
+        } else if (isAndroid) {
+          instructions = `
+            لتثبيت التطبيق على Android:
+            
+            1️⃣ اضغط على القائمة (⋮) في المتصفح
+            2️⃣ اختر "إضافة إلى الشاشة الرئيسية" أو "تثبيت التطبيق"
+            3️⃣ اضغط "إضافة" أو "تثبيت"
+            
+            سيظهر التطبيق في درج التطبيقات! 📱
+          `;
+        } else {
+          instructions = `
+            لتثبيت التطبيق:
+            
+            🖥️ Chrome: ابحث عن أيقونة التثبيت في شريط العناوين
+            📱 الهاتف: استخدم قائمة المتصفح واختر "إضافة إلى الشاشة الرئيسية"
+          `;
+        }
+
+        Swal.fire({
+          title: "تثبيت التطبيق",
+          html: instructions.replace(/\n/g, "<br>"),
+          icon: "info",
+          confirmButtonText: "فهمت",
+          confirmButtonColor: "#059669",
+          customClass: {
+            popup: "text-right",
+          },
+        });
+      }
+
+      // Debug function to manually show install prompt
+      function debugShowInstall() {
+        console.log("Manual install prompt trigger");
+        console.log("deferredPrompt available:", !!deferredPrompt);
+        console.log(
+          "Standalone mode:",
+          window.matchMedia("(display-mode: standalone)").matches
+        );
+        console.log(
+          "Install dismissed:",
+          localStorage.getItem("installDismissed")
+        );
+
+        if (!installPromptShown) {
+          // Force show the prompt for testing
+          const installPrompt = document.getElementById("installPrompt");
+          installPrompt.style.display = "block";
+
+          // If no deferredPrompt, show manual instructions when clicked
+          document
+            .getElementById("installBtn")
+            .addEventListener("click", () => {
+              if (!deferredPrompt) {
+                showManualInstructions();
+              }
+            });
+        }
+      }
+
+      // Add to window for debugging
+      window.debugShowInstall = debugShowInstall;
 
       // Initialize the application
       document.addEventListener("DOMContentLoaded", function () {
@@ -597,15 +704,50 @@
         setupScrollReveal();
         loadPropertiesFromFirebase();
         preventPullToRefresh();
+        registerServiceWorker();
 
         // Setup carousel with a small delay to ensure DOM is ready
         setTimeout(() => {
           setupCarousel();
         }, 100);
 
-        // Show install prompt after 3 seconds
-        setTimeout(showInstallPrompt, 3000);
+        // Show install prompt after 5 seconds, or show manual instructions if no PWA support
+        setTimeout(() => {
+          if (
+            !installPromptShown &&
+            !window.matchMedia("(display-mode: standalone)").matches &&
+            !localStorage.getItem("installDismissed")
+          ) {
+            if (deferredPrompt) {
+              showInstallPrompt();
+            } else {
+              // Show install prompt anyway with manual instructions
+              console.log(
+                "No beforeinstallprompt event, showing manual instructions"
+              );
+              debugShowInstall();
+            }
+          }
+        }, 5000);
       });
+
+      // Register Service Worker for PWA
+      function registerServiceWorker() {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker
+            .register("/JordanHomes/sw.js")
+            .then((registration) => {
+              console.log(
+                "ServiceWorker registered successfully:",
+                registration.scope
+              );
+            })
+            .catch((error) => {
+              console.log("ServiceWorker registration failed:", error);
+              // PWA will still work without service worker for basic install
+            });
+        }
+      }
 
       // Prevent pull to refresh on mobile
       function preventPullToRefresh() {
