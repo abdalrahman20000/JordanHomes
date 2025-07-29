@@ -1,6 +1,20 @@
 {
-  "name": "My App",
-  "short_name": "App",
+  "name": "Jordan Homes",
+  "short_name": "JordanHomes",
   "start_url": "/JordanHomes/",
-  "display": "standalone"
+  "display": "standalone",
+  "theme_color": "#10b981",
+  "background_color": "#f0fdf4",
+  "icons": [
+    {
+      "src": "icons/444.ico",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
