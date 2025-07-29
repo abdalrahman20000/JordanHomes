@@ -23,32 +23,40 @@
       body {
         font-family: "Tajawal", sans-serif;
       }
+
       .property-card {
         transition: all 0.3s ease;
       }
+
       .property-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 15px 30px -10px rgba(16, 185, 129, 0.2);
       }
+
       .nav-link {
         transition: all 0.3s ease;
       }
+
       .nav-link:hover {
         background-color: #f3f4f6;
       }
+
       .nav-link.active {
         background: linear-gradient(135deg, #065f46, #10b981);
         color: white;
       }
+
       .view-tab.active {
         background: linear-gradient(135deg, #065f46, #10b981);
         color: white;
       }
+
       .image-preview {
         position: relative;
         display: inline-block;
         margin: 5px;
       }
+
       .image-preview img {
         width: 100px;
         height: 100px;
@@ -57,9 +65,11 @@
         border: 2px solid #e5e7eb;
         transition: all 0.3s ease;
       }
+
       .image-preview:hover img {
         border-color: #10b981;
       }
+
       .image-preview .remove-image {
         position: absolute;
         top: -5px;
@@ -75,15 +85,18 @@
         font-size: 12px;
         cursor: pointer;
       }
+
       .image-preview .remove-image:hover {
         background: #dc2626;
       }
+
       .stats-card {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease;
       }
+
       .stats-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.1);
@@ -92,6 +105,7 @@
       .btn-hover {
         transition: all 0.3s ease;
       }
+
       .btn-hover:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.2);
@@ -107,10 +121,12 @@
         transition: all 0.3s ease;
         backdrop-filter: blur(10px);
       }
+
       .map-modal.show {
         opacity: 1;
         visibility: visible;
       }
+
       .map-container {
         height: 400px;
         border-radius: 12px;
@@ -120,6 +136,7 @@
       .table-row {
         transition: all 0.3s ease;
       }
+
       .table-row:hover {
         background: rgba(16, 185, 129, 0.05);
       }
@@ -423,6 +440,410 @@
         outline: none;
       }
 
+      /* Welcome popup styles - Persistent Version */
+      .welcome-popup {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        z-index: 1000;
+        transform: translateX(100%);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        min-width: 160px;
+      }
+
+      .welcome-popup.show {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      .welcome-popup.hide {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      .welcome-popup::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        right: 20px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #10b981;
+      }
+
+      .welcome-popup .close-btn {
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        color: white;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        opacity: 0.7;
+      }
+
+      .welcome-popup .close-btn:hover {
+        background: rgba(255, 255, 255, 0.4);
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      .welcome-popup .user-icon {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 16px;
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-3px);
+        }
+        60% {
+          transform: translateY(-2px);
+        }
+      }
+
+      /* Hover effects for better UX */
+      .welcome-popup:hover {
+        transform: translateX(0) scale(1.02);
+        box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+      }
+
+      .welcome-popup:hover .close-btn {
+        opacity: 1;
+      }
+
+      /* Responsive Design Updates */
+      @media (max-width: 1280px) {
+        .max-w-7xl {
+          max-width: 95%;
+        }
+
+        .grid-cols-5 {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .grid-cols-5 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-cols-4 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .properties-cards-grid.grid-cols-3 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .text-4xl {
+          font-size: 2rem;
+        }
+
+        .px-4 {
+          padding-left: 0.75rem;
+          padding-right: 0.75rem;
+        }
+
+        /* Welcome popup responsive */
+        .welcome-popup {
+          right: 15px;
+          top: 75px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        /* Navigation responsive */
+        .flex.justify-between {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .flex.items-center.space-x-4 {
+          flex-direction: column;
+          width: 100%;
+          gap: 0.5rem;
+        }
+
+        .nav-link {
+          padding: 0.5rem;
+          font-size: 0.875rem;
+          width: 100%;
+          text-align: center;
+        }
+
+        /* Grid responsive */
+        .grid-cols-5,
+        .grid-cols-4,
+        .grid-cols-3,
+        .grid-cols-2 {
+          grid-template-columns: 1fr;
+        }
+
+        /* Stats cards responsive */
+        .stats-card .flex.items-center {
+          flex-direction: column;
+          text-align: center;
+          gap: 0.5rem;
+        }
+
+        .stats-card .ml-4 {
+          margin-left: 0;
+          margin-top: 0.5rem;
+        }
+
+        /* Text sizes */
+        .text-4xl {
+          font-size: 1.75rem;
+        }
+
+        .text-2xl {
+          font-size: 1.5rem;
+        }
+
+        /* Spacing */
+        .p-6 {
+          padding: 1rem;
+        }
+
+        .px-6 {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .py-8 {
+          padding-top: 2rem;
+          padding-bottom: 2rem;
+        }
+
+        .gap-6 {
+          gap: 1rem;
+        }
+
+        /* Filter section */
+        .filter-section .grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .filter-section .flex.flex-wrap {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        /* Property cards */
+        .property-card {
+          margin-bottom: 1rem;
+        }
+
+        /* Table responsive */
+        .overflow-x-auto {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .min-w-full {
+          min-width: 800px;
+        }
+
+        /* Modal responsive */
+        .modal-content {
+          max-width: 95%;
+          margin: 1rem;
+        }
+
+        .modal-section .grid {
+          grid-template-columns: 1fr;
+        }
+
+        /* Search bar */
+        .search-input {
+          width: 100%;
+          max-width: none;
+          margin-bottom: 0.5rem;
+        }
+
+        /* View toggle buttons */
+        .view-toggle {
+          width: 100%;
+          justify-content: center;
+        }
+
+        /* Welcome popup responsive */
+        .welcome-popup {
+          right: 10px;
+          top: 70px;
+          font-size: 12px;
+          padding: 10px 16px;
+          max-width: calc(100vw - 40px);
+          white-space: normal;
+          text-align: center;
+          min-width: 140px;
+        }
+
+        .welcome-popup::before {
+          right: 15px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        /* Typography */
+        .text-lg {
+          font-size: 1rem;
+        }
+
+        .text-xl {
+          font-size: 1.125rem;
+        }
+
+        /* Buttons */
+        .btn-hover {
+          padding: 0.5rem 1rem;
+          font-size: 0.875rem;
+        }
+
+        /* Property images */
+        .property-image {
+          height: 150px;
+        }
+
+        /* Stats */
+        .stats-card .text-2xl {
+          font-size: 1.25rem;
+        }
+
+        /* Feature toggles */
+        .feature-toggle {
+          width: 50px;
+          height: 25px;
+        }
+
+        .feature-toggle .slider:before {
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3.5px;
+        }
+
+        .feature-toggle input:checked + .slider:before {
+          transform: translateX(25px);
+        }
+
+        /* Form inputs */
+        .form-input {
+          font-size: 16px; /* Prevent zoom on iOS */
+        }
+
+        /* Storage section */
+        .storage-content .grid {
+          grid-template-columns: 1fr;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .action-buttons button {
+          width: 100%;
+        }
+
+        /* Welcome popup responsive */
+        .welcome-popup {
+          right: 8px;
+          top: 65px;
+          font-size: 11px;
+          padding: 8px 12px;
+          min-width: 120px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        /* Container */
+        .container,
+        .max-w-7xl {
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+        }
+
+        /* Rounded corners */
+        .rounded-xl {
+          border-radius: 0.5rem;
+        }
+
+        /* Shadows */
+        .shadow-xl {
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Property cards */
+        .property-image {
+          height: 120px;
+        }
+
+        .property-card .p-6 {
+          padding: 0.75rem;
+        }
+
+        /* Navigation */
+        .nav-link {
+          font-size: 0.75rem;
+          padding: 0.4rem;
+        }
+
+        /* Welcome popup responsive */
+        .welcome-popup {
+          right: 5px;
+          top: 60px;
+          font-size: 10px;
+          padding: 6px 10px;
+          min-width: 100px;
+        }
+
+        .welcome-popup .user-icon {
+          font-size: 14px;
+          margin-left: 6px;
+        }
+
+        .welcome-popup .close-btn {
+          width: 18px;
+          height: 18px;
+          font-size: 10px;
+        }
+      }
+
+      /* RTL adjustments */
       [dir="rtl"] .fa-mr-1,
       [dir="rtl"] .fa-mr-2,
       [dir="rtl"] .fa-mr-3 {
@@ -473,6 +894,81 @@
       [dir="rtl"] .pl-3 {
         padding-left: 0 !important;
         padding-right: 0.75rem !important;
+      }
+
+      /* RTL adjustments for welcome popup */
+      [dir="rtl"] .welcome-popup {
+        right: auto;
+        left: 20px;
+      }
+
+      [dir="rtl"] .welcome-popup::before {
+        right: auto;
+        left: 20px;
+      }
+
+      [dir="rtl"] .welcome-popup .user-icon {
+        margin-left: 0;
+        margin-right: 8px;
+      }
+
+      [dir="rtl"] .welcome-popup .close-btn {
+        left: auto;
+        right: -5px;
+      }
+
+      @media (max-width: 1024px) {
+        [dir="rtl"] .welcome-popup {
+          left: 15px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        [dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+          margin-left: 0;
+          margin-right: 0;
+          margin-bottom: 0.5rem;
+        }
+
+        [dir="rtl"] .ml-1,
+        [dir="rtl"] .ml-2,
+        [dir="rtl"] .ml-3,
+        [dir="rtl"] .ml-4 {
+          margin-left: 0;
+          margin-right: 0.25rem;
+        }
+
+        [dir="rtl"] .mr-1,
+        [dir="rtl"] .mr-2,
+        [dir="rtl"] .mr-3,
+        [dir="rtl"] .mr-4 {
+          margin-right: 0;
+          margin-left: 0.25rem;
+        }
+
+        [dir="rtl"] .welcome-popup {
+          left: 10px;
+        }
+
+        [dir="rtl"] .welcome-popup::before {
+          left: 15px;
+        }
+
+        [dir="rtl"] .welcome-popup .user-icon {
+          margin-right: 6px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        [dir="rtl"] .welcome-popup {
+          left: 8px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        [dir="rtl"] .welcome-popup {
+          left: 5px;
+        }
       }
     </style>
   </head>
@@ -2796,9 +3292,39 @@
         showAddPropertyModal(type);
       }
 
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && !isWelcomePopupVisible()) {
+          setTimeout(() => {
+            const authToken = getCookie("jordan_home_auth");
+            if (authToken) {
+              const validation = validateAuthToken(authToken);
+              if (validation.valid) {
+                showWelcomePopup(validation.userData);
+              }
+            }
+          }, 2000);
+        }
+      });
+
       // Initialize the application
       document.addEventListener("DOMContentLoaded", async function () {
         try {
+          // First check authentication
+          if (!initializeAuth()) {
+            // Authentication failed, stop here
+            return;
+          }
+
+          setTimeout(() => {
+            const authToken = getCookie("jordan_home_auth");
+            if (authToken) {
+              const validation = validateAuthToken(authToken);
+              if (validation.valid) {
+                showAuthSuccessPopup(validation.userData);
+              }
+            }
+          }, 1500);
+
           showLoading();
 
           await waitForFirebase();
@@ -2812,13 +3338,15 @@
           updateDashboardStats();
           renderProperties();
 
-          Swal.fire({
-            title: "خطأ في الاتصال",
-            text: "فشل في الاتصال بقاعدة البيانات. يمكنك المحاولة مرة أخرى بالضغط على زر التحديث.",
-            icon: "warning",
-            confirmButtonColor: "#10b981",
-            confirmButtonText: "حسناً",
-          });
+          if (typeof Swal !== "undefined") {
+            Swal.fire({
+              title: "خطأ في الاتصال",
+              text: "فشل في الاتصال بقاعدة البيانات. يمكنك المحاولة مرة أخرى بالضغط على زر التحديث.",
+              icon: "warning",
+              confirmButtonColor: "#10b981",
+              confirmButtonText: "حسناً",
+            });
+          }
         } finally {
           hideLoading();
         }
@@ -4540,6 +5068,678 @@
             });
           }
         });
+
+      function getCookie(name) {
+        try {
+          // First try to get from cookies
+          const cookieValue = document.cookie.split("; ").reduce((r, v) => {
+            const parts = v.split("=");
+            return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+          }, "");
+
+          if (cookieValue) {
+            return cookieValue;
+          }
+
+          // Fallback to localStorage
+          const localStorageData = localStorage.getItem(name);
+          if (localStorageData) {
+            try {
+              const parsed = JSON.parse(localStorageData);
+              if (parsed.expires > Date.now()) {
+                console.log(`Retrieved ${name} from localStorage fallback`);
+                return parsed.value;
+              } else {
+                // Expired, remove it
+                localStorage.removeItem(name);
+              }
+            } catch (parseError) {
+              console.error("Error parsing localStorage data:", parseError);
+              localStorage.removeItem(name);
+            }
+          }
+
+          return "";
+        } catch (error) {
+          console.error("Error getting cookie:", error);
+          return "";
+        }
+      }
+
+      function deleteCookie(name) {
+        try {
+          // Clear cookie
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+          // Also remove from localStorage
+          localStorage.removeItem(name);
+          console.log(`Removed ${name} from both cookies and localStorage`);
+        } catch (error) {
+          console.error("Error deleting cookie:", error);
+        }
+      }
+
+      function clearAllAuthData() {
+        console.log("Clearing all authentication data...");
+
+        // Clear all authentication-related cookies
+        deleteCookie("jordan_home_auth");
+        deleteCookie("jordan_home_user");
+
+        // Clear any additional auth-related data from localStorage
+        try {
+          localStorage.removeItem("jordan_home_auth");
+          localStorage.removeItem("jordan_home_user");
+          localStorage.removeItem("user_session");
+          localStorage.removeItem("auth_token");
+        } catch (error) {
+          console.error("Error clearing localStorage:", error);
+        }
+
+        // Clear session storage as well
+        try {
+          sessionStorage.clear();
+        } catch (error) {
+          console.error("Error clearing sessionStorage:", error);
+        }
+
+        console.log("All authentication data cleared successfully");
+      }
+
+      function validateAuthToken(token) {
+        try {
+          if (!token || token.length === 0) {
+            return { valid: false, error: "No token provided" };
+          }
+
+          // Decode the base64 token
+          const decoded = atob(token);
+          const tokenData = JSON.parse(decoded);
+
+          // Check if token has required fields
+          if (
+            !tokenData.id ||
+            !tokenData.email ||
+            !tokenData.timestamp ||
+            !tokenData.expires
+          ) {
+            return { valid: false, error: "Invalid token structure" };
+          }
+
+          // Check if token is expired
+          const now = Date.now();
+          if (now > tokenData.expires) {
+            return { valid: false, error: "Token expired" };
+          }
+
+          // Check if token is too old (created more than 7 days ago)
+          const tokenAge = now - tokenData.timestamp;
+          const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+          if (tokenAge > maxAge) {
+            return { valid: false, error: "Token too old" };
+          }
+
+          return {
+            valid: true,
+            userData: {
+              id: tokenData.id,
+              email: tokenData.email,
+              username: tokenData.username || "مستخدم",
+              loginTime: tokenData.timestamp,
+            },
+          };
+        } catch (error) {
+          console.error("Token validation error:", error);
+          return { valid: false, error: "Token validation failed" };
+        }
+      }
+
+      function checkAuthentication() {
+        console.log("Checking authentication...");
+
+        const authToken = getCookie("jordan_home_auth");
+        const userInfo = getCookie("jordan_home_user");
+
+        console.log("Auth token found:", authToken ? "Yes" : "No");
+        console.log("User info found:", userInfo ? "Yes" : "No");
+
+        if (!authToken) {
+          console.log("No authentication token found");
+          showAuthErrorAndRedirect("لم يتم العثور على بيانات تسجيل الدخول");
+          return false;
+        }
+
+        const validation = validateAuthToken(authToken);
+        if (!validation.valid) {
+          console.log("Invalid or expired token:", validation.error);
+          clearAllAuthData();
+          showAuthErrorAndRedirect(
+            "انتهت صلاحية جلسة تسجيل الدخول، يرجى تسجيل الدخول مرة أخرى"
+          );
+          return false;
+        }
+
+        console.log(
+          "Authentication successful for user:",
+          validation.userData.email
+        );
+
+        // Update user info display if needed
+        updateUserDisplay(validation.userData);
+
+        return true;
+      }
+
+      function showAuthErrorAndRedirect(message) {
+        // Check if SweetAlert is available
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            title: "غير مصرح بالدخول",
+            text: message,
+            icon: "error",
+            confirmButtonColor: "#10b981",
+            confirmButtonText: "تسجيل الدخول",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              redirectToLogin();
+            }
+          });
+        } else {
+          // Fallback to native alert if SweetAlert is not available
+          alert("غير مصرح بالدخول: " + message);
+          redirectToLogin();
+        }
+
+        // Backup redirect in case SweetAlert fails
+        setTimeout(() => {
+          redirectToLogin();
+        }, 5000);
+      }
+
+      function redirectToLogin() {
+        console.log("Redirecting to login page...");
+        try {
+          window.location.href = "index.html";
+        } catch (error) {
+          console.error("Redirect failed:", error);
+          // Fallback: force page reload to index
+          window.location.replace("index.html");
+        }
+      }
+
+      function updateUserDisplay(userData) {
+        try {
+          // Show persistent welcome popup (no auto-hide)
+          if (!isWelcomePopupVisible()) {
+            showWelcomePopup(userData);
+          }
+
+          // Keep existing user info element code if you have it (optional)
+          let userInfoElement = document.getElementById("user-info");
+          if (!userInfoElement) {
+            userInfoElement = document.createElement("div");
+            userInfoElement.id = "user-info";
+            userInfoElement.className = "text-sm text-gray-600 hidden lg:block"; // Only show on large screens
+
+            const nav = document.querySelector("nav .flex.items-center");
+            if (nav) {
+              nav.appendChild(userInfoElement);
+            }
+          }
+
+          if (userInfoElement) {
+            userInfoElement.innerHTML = `
+        <span class="flex items-center">
+          <i class="fas fa-user-circle ml-2"></i>
+          ${userData.username}
+        </span>
+      `;
+          }
+        } catch (error) {
+          console.error("Error updating user display:", error);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          // Your existing authentication and initialization code here...
+
+          // ADD THIS: Show welcome popup after successful authentication
+          setTimeout(() => {
+            const authToken = getCookie("jordan_home_auth");
+            if (authToken) {
+              const validation = validateAuthToken(authToken);
+              if (validation.valid) {
+                showAuthSuccessPopup(validation.userData);
+              }
+            }
+          }, 1500); // Show popup after 1.5 seconds
+        } catch (error) {
+          // Your existing error handling...
+        }
+      });
+
+      // Logout function
+      function logout() {
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            title: "تسجيل الخروج",
+            text: "هل أنت متأكد من رغبتك في تسجيل الخروج؟",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#10b981",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "نعم، تسجيل الخروج",
+            cancelButtonText: "إلغاء",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              performLogout();
+            }
+          });
+        } else {
+          if (confirm("هل أنت متأكد من رغبتك في تسجيل الخروج؟")) {
+            performLogout();
+          }
+        }
+      }
+
+      function performLogout() {
+        console.log("User logging out...");
+        clearAllAuthData();
+
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            title: "تم تسجيل الخروج",
+            text: "تم تسجيل خروجك بنجاح",
+            icon: "success",
+            confirmButtonColor: "#10b981",
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            redirectToLogin();
+          });
+        }
+
+        // Backup redirect
+        setTimeout(() => {
+          redirectToLogin();
+        }, 2500);
+      }
+
+      // Add logout button to navigation
+      function addLogoutButton() {
+        try {
+          const nav = document.querySelector(
+            "nav .flex.items-center.space-x-4"
+          );
+          if (nav && !document.getElementById("logout-btn")) {
+            const logoutBtn = document.createElement("button");
+            logoutBtn.id = "logout-btn";
+            logoutBtn.className =
+              "nav-link px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 transition-colors";
+            logoutBtn.innerHTML =
+              '<i class="fas fa-sign-out-alt ml-1"></i> تسجيل الخروج';
+            logoutBtn.onclick = logout;
+            nav.appendChild(logoutBtn);
+          }
+        } catch (error) {
+          console.error("Error adding logout button:", error);
+        }
+      }
+
+      // Periodic token validation (every 5 minutes)
+      function startTokenValidation() {
+        setInterval(() => {
+          console.log("Performing periodic token validation...");
+          const authToken = getCookie("jordan_home_auth");
+
+          if (!authToken) {
+            console.log("No token found during periodic check");
+            showAuthErrorAndRedirect("تم انتهاء جلسة تسجيل الدخول");
+            return;
+          }
+
+          const validation = validateAuthToken(authToken);
+          if (!validation.valid) {
+            console.log(
+              "Token invalid during periodic check:",
+              validation.error
+            );
+            clearAllAuthData();
+            showAuthErrorAndRedirect("انتهت صلاحية جلسة تسجيل الدخول");
+            return;
+          }
+
+          console.log("Periodic token validation successful");
+        }, 5 * 60 * 1000); // 5 minutes
+      }
+
+      // Initialize authentication check
+      function initializeAuth() {
+        console.log("Dashboard page loading...");
+
+        // First, check authentication before doing anything else
+        if (!checkAuthentication()) {
+          // Authentication failed, redirect will be handled by checkAuthentication
+          return false;
+        }
+
+        console.log("Authentication successful, initializing dashboard...");
+
+        // Add logout functionality
+        addLogoutButton();
+
+        // Start periodic token validation
+        startTokenValidation();
+
+        return true;
+      }
+
+      // Welcome popup functions - Persistent Version
+      function showWelcomePopup(userData) {
+        try {
+          // Remove existing popup if any
+          const existingPopup = document.getElementById("welcome-popup");
+          if (existingPopup) {
+            existingPopup.remove();
+          }
+
+          // Create popup element
+          const popup = document.createElement("div");
+          popup.id = "welcome-popup";
+          popup.className = "welcome-popup";
+          popup.innerHTML = `
+      <button class="close-btn" onclick="hideWelcomePopup()" title="إغلاق">×</button>
+      <i class="fas fa-user-circle user-icon"></i>
+      مرحباً، ${userData.username || "مستخدم"}
+    `;
+
+          // Add to body
+          document.body.appendChild(popup);
+
+          // Show popup with animation
+          setTimeout(() => {
+            popup.classList.add("show");
+          }, 100);
+
+          // NO AUTO-HIDE - popup stays visible until manually closed
+        } catch (error) {
+          console.error("Error showing welcome popup:", error);
+        }
+      }
+
+      function hideWelcomePopup() {
+        try {
+          const popup = document.getElementById("welcome-popup");
+          if (popup) {
+            popup.classList.remove("show");
+            popup.classList.add("hide");
+
+            // Remove from DOM after animation
+            setTimeout(() => {
+              if (popup && popup.parentNode) {
+                popup.parentNode.removeChild(popup);
+              }
+            }, 500);
+          }
+        } catch (error) {
+          console.error("Error hiding welcome popup:", error);
+        }
+      }
+
+      // Check if popup already exists (prevent duplicates)
+      function isWelcomePopupVisible() {
+        const popup = document.getElementById("welcome-popup");
+        return popup && popup.classList.contains("show");
+      }
+
+      // Show popup on successful authentication (only if not already visible)
+      function showAuthSuccessPopup(userData) {
+        // Small delay to ensure page is loaded
+        setTimeout(() => {
+          if (!isWelcomePopupVisible()) {
+            showWelcomePopup(userData);
+          }
+        }, 1000);
+      }
+
+      // Refresh popup with current user data (useful for updates)
+      function refreshWelcomePopup() {
+        try {
+          const authToken = getCookie("jordan_home_auth");
+          if (authToken) {
+            const validation = validateAuthToken(authToken);
+            if (validation.valid) {
+              showWelcomePopup(validation.userData);
+            }
+          }
+        } catch (error) {
+          console.error("Error refreshing welcome popup:", error);
+        }
+      }
+
+      // Auto-show popup when user becomes active (optional)
+      function showPopupOnUserActivity() {
+        let activityTimer;
+
+        function resetTimer() {
+          clearTimeout(activityTimer);
+          activityTimer = setTimeout(() => {
+            if (!isWelcomePopupVisible()) {
+              const authToken = getCookie("jordan_home_auth");
+              if (authToken) {
+                const validation = validateAuthToken(authToken);
+                if (validation.valid) {
+                  showWelcomePopup(validation.userData);
+                }
+              }
+            }
+          }, 30000); // Show after 30 seconds of inactivity
+        }
+
+        // Track user activity
+        ["mousedown", "mousemove", "keypress", "scroll", "touchstart"].forEach(
+          (event) => {
+            document.addEventListener(event, resetTimer, true);
+          }
+        );
+
+        resetTimer(); // Start timer
+      }
+
+      // Make functions available globally
+      window.showWelcomePopup = showWelcomePopup;
+      window.hideWelcomePopup = hideWelcomePopup;
+      window.isWelcomePopupVisible = isWelcomePopupVisible;
+      window.refreshWelcomePopup = refreshWelcomePopup;
+      window.showPopupOnUserActivity = showPopupOnUserActivity;
+
+      //-----------------------
+
+      // Welcome popup functions
+      function showWelcomePopup(userData) {
+        try {
+          // Remove existing popup if any
+          const existingPopup = document.getElementById("welcome-popup");
+          if (existingPopup) {
+            existingPopup.remove();
+          }
+
+          // Create popup element
+          const popup = document.createElement("div");
+          popup.id = "welcome-popup";
+          popup.className = "welcome-popup";
+          popup.innerHTML = `
+      <button class="close-btn" onclick="hideWelcomePopup()" title="إغلاق">×</button>
+      <i class="fas fa-user-circle user-icon"></i>
+      مرحباً، ${userData.username || "مستخدم"}
+    `;
+
+          // Add to body
+          document.body.appendChild(popup);
+
+          // Show popup with animation
+          setTimeout(() => {
+            popup.classList.add("show");
+          }, 100);
+
+          // Auto hide after 5 seconds
+          setTimeout(() => {
+            hideWelcomePopup();
+          }, 5000);
+        } catch (error) {
+          console.error("Error showing welcome popup:", error);
+        }
+      }
+
+      function hideWelcomePopup() {
+        try {
+          const popup = document.getElementById("welcome-popup");
+          if (popup) {
+            popup.classList.remove("show");
+            popup.classList.add("hide");
+
+            // Remove from DOM after animation
+            setTimeout(() => {
+              if (popup && popup.parentNode) {
+                popup.parentNode.removeChild(popup);
+              }
+            }, 500);
+          }
+        } catch (error) {
+          console.error("Error hiding welcome popup:", error);
+        }
+      }
+
+      // Show popup on successful authentication
+      function showAuthSuccessPopup(userData) {
+        setTimeout(() => {
+          showWelcomePopup(userData);
+        }, 1000); // Delay to ensure page is loaded
+      }
+
+      // Make functions available globally
+      window.showWelcomePopup = showWelcomePopup;
+      window.hideWelcomePopup = hideWelcomePopup;
+
+      // Handle page visibility change - check auth when user returns to tab
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) {
+          console.log("Page became visible, checking authentication...");
+          const authToken = getCookie("jordan_home_auth");
+
+          if (!authToken) {
+            showAuthErrorAndRedirect("تم انتهاء جلسة تسجيل الدخول");
+            return;
+          }
+
+          const validation = validateAuthToken(authToken);
+          if (!validation.valid) {
+            clearAllAuthData();
+            showAuthErrorAndRedirect("انتهت صلاحية جلسة تسجيل الدخول");
+            return;
+          }
+        }
+      });
+
+      // Handle browser back/forward navigation
+      window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+          console.log("Page loaded from cache, checking authentication...");
+          if (!checkAuthentication()) {
+            return;
+          }
+        }
+      });
+
+      // OPTIONAL: Show popup again when user returns to tab
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && !isWelcomePopupVisible()) {
+          setTimeout(() => {
+            const authToken = getCookie("jordan_home_auth");
+            if (authToken) {
+              const validation = validateAuthToken(authToken);
+              if (validation.valid) {
+                showWelcomePopup(validation.userData);
+              }
+            }
+          }, 2000);
+        }
+      });
+    </script>
+
+    <!-- 5. MANUAL USAGE EXAMPLES & CONTROL FUNCTIONS -->
+    <script>
+      // Examples of how to use the persistent popup:
+
+      // Show popup manually
+      // showWelcomePopup({username: "admin"});
+
+      // Hide popup manually
+      // hideWelcomePopup();
+
+      // Check if popup is visible
+      // if (isWelcomePopupVisible()) {
+      //   console.log("Popup is currently visible");
+      // }
+
+      // Refresh popup with current user data
+      // refreshWelcomePopup();
+
+      // Toggle popup visibility
+      function toggleWelcomePopup() {
+        if (isWelcomePopupVisible()) {
+          hideWelcomePopup();
+        } else {
+          const authToken = getCookie("jordan_home_auth");
+          if (authToken) {
+            const validation = validateAuthToken(authToken);
+            if (validation.valid) {
+              showWelcomePopup(validation.userData);
+            }
+          }
+        }
+      }
+
+      // Add keyboard shortcut to toggle popup (Ctrl/Cmd + Shift + W)
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "W") {
+          e.preventDefault();
+          toggleWelcomePopup();
+        }
+      });
+
+      // Add to global scope
+      window.toggleWelcomePopup = toggleWelcomePopup;
+
+      // Optional: Add a button to navigation for toggling popup
+      function addPopupToggleButton() {
+        try {
+          const nav = document.querySelector(
+            "nav .flex.items-center.space-x-4"
+          );
+          if (nav && !document.getElementById("popup-toggle-btn")) {
+            const toggleBtn = document.createElement("button");
+            toggleBtn.id = "popup-toggle-btn";
+            toggleBtn.className =
+              "nav-link px-3 py-2 rounded-md text-sm font-medium text-green-600 hover:text-green-800 hover:bg-green-50 transition-colors";
+            toggleBtn.innerHTML =
+              '<i class="fas fa-user-circle ml-1"></i> المستخدم';
+            toggleBtn.onclick = toggleWelcomePopup;
+            toggleBtn.title = "إظهار/إخفاء معلومات المستخدم";
+            nav.appendChild(toggleBtn);
+          }
+        } catch (error) {
+          console.error("Error adding popup toggle button:", error);
+        }
+      }
+
+      // Make functions available globally
+      window.logout = logout;
+      window.checkAuthentication = checkAuthentication;
+      window.clearAllAuthData = clearAllAuthData;
+      window.initializeAuth = initializeAuth;
 
       // Make functions available globally
       window.showAddPropertyPopup = showAddPropertyPopup;
