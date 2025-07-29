@@ -1,6 +1,6 @@
 {
   "name": "My App",
   "short_name": "App",
-  "start_url": "/JordanHomes/index.html",
+  "start_url": "/JordanHomes/",
   "display": "standalone"
 }
