@@ -2811,6 +2811,13 @@
       let propertiesRef = null;
       let apartmentCounter = 0;
 
+        const menuBtn = document.getElementById("mobile-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  menuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
       // Wait for Firebase to be initialized
       function waitForFirebase() {
         return new Promise((resolve, reject) => {
@@ -5437,12 +5444,7 @@
           });
 
         
-  const menuBtn = document.getElementById("mobile-menu-button");
-  const mobileMenu = document.getElementById("mobile-menu");
 
-  menuBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
-  });
 
 
           // Handle browser back/forward navigation
