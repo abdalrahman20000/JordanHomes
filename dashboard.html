@@ -34,22 +34,22 @@
       }
 
       .nav-link {
-transition: all 0.3s ease;
-}
+        transition: all 0.3s ease;
+      }
 
-.nav-link:hover {  
-    background-color: #f3f4f6;  
-  }  
+      .nav-link:hover {
+        background-color: #f3f4f6;
+      }
 
-  .nav-link.active {  
-    background: linear-gradient(135deg, #065f46, #10b981);  
-    color: white;  
-  }  
+      .nav-link.active {
+        background: linear-gradient(135deg, #065f46, #10b981);
+        color: white;
+      }
 
-  .view-tab.active {  
-    background: linear-gradient(135deg, #065f46, #10b981);  
-    color: white;  
-  }
+      .view-tab.active {
+        background: linear-gradient(135deg, #065f46, #10b981);
+        color: white;
+      }
       .image-preview {
         position: relative;
         display: inline-block;
@@ -541,6 +541,41 @@ transition: all 0.3s ease;
         opacity: 1;
       }
 
+      /* Mobile Navigation Styles */
+      .mobile-nav-link.active {
+        background: linear-gradient(135deg, #065f46, #10b981);
+        color: white;
+      }
+
+      #mobile-menu {
+        transform: translateY(-10px);
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+      }
+
+      #mobile-menu.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Mobile menu button animation */
+      #mobile-menu-button {
+        transition: all 0.3s ease;
+      }
+
+      #mobile-menu-button:hover {
+        transform: scale(1.05);
+      }
+
+      /* Menu icon rotation animation */
+      #menu-icon {
+        transition: transform 0.3s ease;
+      }
+
+      #menu-icon.open {
+        transform: rotate(90deg);
+      }
+
       /* Responsive Design Updates */
       @media (max-width: 1280px) {
         .max-w-7xl {
@@ -582,6 +617,21 @@ transition: all 0.3s ease;
       }
 
       @media (max-width: 768px) {
+        /* Enhanced mobile navigation */
+        .max-w-7xl {
+          max-width: 100%;
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        nav .text-xl {
+          font-size: 1.125rem;
+        }
+
+        nav .text-2xl {
+          font-size: 1.5rem;
+        }
+
         /* Navigation responsive */
         .flex.justify-between {
           flex-direction: column;
@@ -715,7 +765,82 @@ transition: all 0.3s ease;
         }
       }
 
+      /* Updated Mobile Navigation Layout */
+      @media (max-width: 768px) {
+        /* Center logo on mobile */
+        .flex.justify-between.items-center {
+          position: relative;
+        }
+
+        /* Logo centering */
+        .flex.items-center.md\\:flex-none.flex-1 {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          flex: none;
+        }
+
+        /* Menu button positioning */
+        #mobile-menu-button {
+          z-index: 10;
+          position: relative;
+        }
+
+        /* Balance element */
+        .md\\:hidden.w-10 {
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+      }
+
+      /* Logout button styles */
+      #logout-btn-desktop,
+      #logout-btn-mobile {
+        transition: all 0.3s ease;
+      }
+
+      #logout-btn-desktop:hover,
+      #logout-btn-mobile:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+      }
+
+      /* Enhanced mobile menu styling */
+      #mobile-menu .space-y-1 {
+        padding-bottom: 1rem;
+      }
+
+      #mobile-menu button {
+        transition: all 0.3s ease;
+      }
+
+      #mobile-menu button:hover {
+        transform: translateY(-1px);
+      }
+
+      /* RTL adjustments for new layout */
+      @media (max-width: 768px) {
+        [dir="rtl"] .flex.items-center.md\\:flex-none.flex-1 {
+          left: 50%;
+          transform: translateX(50%);
+        }
+      }
+
       @media (max-width: 640px) {
+        /* Enhanced mobile navigation */
+        nav .text-xl {
+          font-size: 1rem;
+        }
+
+        nav .text-2xl {
+          font-size: 1.25rem;
+        }
+
+        .mobile-nav-link {
+          padding: 0.75rem 1rem;
+          margin: 0.25rem 0;
+        }
+
         /* Typography */
         .text-lg {
           font-size: 1rem;
@@ -789,6 +914,21 @@ transition: all 0.3s ease;
       }
 
       @media (max-width: 480px) {
+        /* Enhanced mobile navigation */
+        .max-w-7xl {
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+        }
+
+        nav .ml-2 {
+          margin-left: 0.5rem;
+        }
+
+        #mobile-menu .px-2 {
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+        }
+
         /* Container */
         .container,
         .max-w-7xl {
@@ -895,6 +1035,21 @@ transition: all 0.3s ease;
         padding-right: 0.75rem !important;
       }
 
+      /* RTL adjustments for mobile navigation */
+      [dir="rtl"] .mobile-nav-link {
+        text-align: right;
+      }
+
+      [dir="rtl"] .mobile-nav-link i {
+        margin-left: 0;
+        margin-right: 0.5rem;
+      }
+
+      [dir="rtl"] #mobile-menu button i {
+        margin-left: 0;
+        margin-right: 0.5rem;
+      }
+
       /* RTL adjustments for welcome popup */
       [dir="rtl"] .welcome-popup {
         right: auto;
@@ -980,49 +1135,110 @@ transition: all 0.3s ease;
       </div>
     </div>
 
-    
-<!-- Navigation -->
-<!-- Navigation -->  <nav  
-  class="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20"  
->  
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">  
-    <div class="flex justify-between h-16">  
-      <div class="flex items-center">  
-        <div class="flex-shrink-0 flex items-center">  
-          <i class="fas fa-home text-green-700 text-2xl ml-2"></i>  
-          <span class="text-xl font-bold text-gray-800">ترس هوم</span>  
-        </div>  
-      </div>  
-      <div class="flex items-center space-x-4">  
-        <a  
-          href="home.html"  
-          class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"  
-        >  
-          <i class="fas fa-home ml-1"></i> الرئيسية  
-        </a>  
-        <a  
-          href="catalog.html"  
-          class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"  
-        >  
-          <i class="fas fa-th-large ml-1"></i> الكتالوج  
-        </a>  
-        <a  
-          href="dashboard.html"  
-          class="nav-link active px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"  
-        >  
-          <i class="fas fa-tachometer-alt ml-1"></i> لوحة التحكم  
-        </a>  
-        <button  
-          onclick="showAddPropertyPopup()"  
-          class="btn-hover bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"  
-        >  
-          <i class="fas fa-plus ml-1"></i> إضافة عقار  
-        </button>  
-      </div>  
-    </div>  
-  </div>  
-</nav>
-    
+    <!-- Navigation -->
+    <nav
+      class="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <!-- Mobile menu button - Left side -->
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              onclick="toggleMobileMenu()"
+              class="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+            >
+              <i id="menu-icon" class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+
+          <!-- Logo Section - Right on mobile, left on desktop -->
+          <div class="flex items-center md:order-first">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-home text-green-700 text-2xl ml-2"></i>
+              <span class="text-xl font-bold text-gray-800">ترس هوم</span>
+            </div>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-4">
+            <a
+              href="home.html"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <i class="fas fa-home ml-1"></i> الرئيسية
+            </a>
+            <a
+              href="catalog.html"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <i class="fas fa-th-large ml-1"></i> الكتالوج
+            </a>
+            <a
+              href="dashboard.html"
+              class="nav-link active px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <i class="fas fa-tachometer-alt ml-1"></i> لوحة التحكم
+            </a>
+            <button
+              onclick="showAddPropertyPopup()"
+              class="btn-hover bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              <i class="fas fa-plus ml-1"></i> إضافة عقار
+            </button>
+            <!-- Desktop Logout Button -->
+            <button
+              id="logout-btn-desktop"
+              onclick="logout()"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 transition-colors"
+            >
+              <i class="fas fa-sign-out-alt ml-1"></i> خروج
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div
+          id="mobile-menu"
+          class="md:hidden hidden bg-white border-t border-gray-200 shadow-lg"
+        >
+          <div class="px-2 pt-2 pb-3 space-y-1">
+            <a
+              href="home.html"
+              class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+            >
+              <i class="fas fa-home ml-2"></i> الرئيسية
+            </a>
+            <a
+              href="catalog.html"
+              class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+            >
+              <i class="fas fa-th-large ml-2"></i> الكتالوج
+            </a>
+            <a
+              href="dashboard.html"
+              class="mobile-nav-link active block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+            >
+              <i class="fas fa-tachometer-alt ml-2"></i> لوحة التحكم
+            </a>
+            <button
+              onclick="showAddPropertyPopup(); toggleMobileMenu();"
+              class="w-full text-right bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-3 py-2 rounded-md text-base font-medium transition-all duration-300 mt-2"
+            >
+              <i class="fas fa-plus ml-2"></i> إضافة عقار
+            </button>
+            <!-- Mobile Logout Button -->
+            <button
+              id="logout-btn-mobile"
+              onclick="logout(); toggleMobileMenu();"
+              class="w-full text-right bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-base font-medium transition-all duration-300 mt-2"
+            >
+              <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <!-- Dashboard Content -->
     <div class="min-h-screen">
@@ -2797,7 +3013,6 @@ transition: all 0.3s ease;
       let propertiesRef = null;
       let apartmentCounter = 0;
 
-        
       // Wait for Firebase to be initialized
       function waitForFirebase() {
         return new Promise((resolve, reject) => {
@@ -5423,9 +5638,61 @@ transition: all 0.3s ease;
             }
           });
 
-        
+          // Mobile menu toggle functionality
+          function toggleMobileMenu() {
+            const mobileMenu = document.getElementById("mobile-menu");
+            const menuIcon = document.getElementById("menu-icon");
 
+            if (mobileMenu.classList.contains("hidden")) {
+              // Show menu
+              mobileMenu.classList.remove("hidden");
+              setTimeout(() => {
+                mobileMenu.classList.add("show");
+              }, 10);
+              menuIcon.classList.add("open");
+              menuIcon.classList.remove("fa-bars");
+              menuIcon.classList.add("fa-times");
+            } else {
+              // Hide menu
+              mobileMenu.classList.remove("show");
+              setTimeout(() => {
+                mobileMenu.classList.add("hidden");
+              }, 300);
+              menuIcon.classList.remove("open");
+              menuIcon.classList.remove("fa-times");
+              menuIcon.classList.add("fa-bars");
+            }
+          }
 
+          // Close mobile menu when clicking outside
+          document.addEventListener("click", function (event) {
+            const mobileMenu = document.getElementById("mobile-menu");
+            const mobileMenuButton =
+              document.getElementById("mobile-menu-button");
+
+            if (
+              !mobileMenu.contains(event.target) &&
+              !mobileMenuButton.contains(event.target)
+            ) {
+              if (!mobileMenu.classList.contains("hidden")) {
+                toggleMobileMenu();
+              }
+            }
+          });
+
+          // Close mobile menu on window resize if open
+          window.addEventListener("resize", function () {
+            const mobileMenu = document.getElementById("mobile-menu");
+            if (
+              window.innerWidth >= 768 &&
+              !mobileMenu.classList.contains("hidden")
+            ) {
+              toggleMobileMenu();
+            }
+          });
+
+          // Make function globally available
+          window.toggleMobileMenu = toggleMobileMenu;
 
           // Handle browser back/forward navigation
           window.addEventListener("pageshow", function (event) {
