@@ -34,22 +34,23 @@
       }
 
       .nav-link {
-        transition: all 0.3s ease;
-      }
+      .nav-link {
+  transition: all 0.3s ease;
+}
 
-      .nav-link:hover {
-        background-color: #f3f4f6;
-      }
+.nav-link:hover {
+  background-color: #f3f4f6;
+}
 
-      .nav-link.active {
-        background: linear-gradient(135deg, #065f46, #10b981);
-        color: white;
-      }
+.nav-link.active {
+  background: linear-gradient(135deg, #065f46, #10b981);
+  color: white;
+}
 
-      .view-tab.active {
-        background: linear-gradient(135deg, #065f46, #10b981);
-        color: white;
-      }
+.view-tab.active {
+  background: linear-gradient(135deg, #065f46, #10b981);
+  color: white;
+}
 
       .image-preview {
         position: relative;
@@ -980,48 +981,62 @@
         <p class="text-white mt-4">جاري التحميل...</p>
       </div>
     </div>
-
-    <!-- Navigation -->
-    <nav
-      class="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20"
-    >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 flex items-center">
-              <i class="fas fa-home text-green-700 text-2xl ml-2"></i>
-              <span class="text-xl font-bold text-gray-800">ترس هوم</span>
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <a
-              href="home.html"
-              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-            >
-              <i class="fas fa-home ml-1"></i> الرئيسية
-            </a>
-            <a
-              href="catalog.html"
-              class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-            >
-              <i class="fas fa-th-large ml-1"></i> الكتالوج
-            </a>
-            <a
-              href="dashboard.html"
-              class="nav-link active px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-            >
-              <i class="fas fa-tachometer-alt ml-1"></i> لوحة التحكم
-            </a>
-            <button
-              onclick="showAddPropertyPopup()"
-              class="btn-hover bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-            >
-              <i class="fas fa-plus ml-1"></i> إضافة عقار
-            </button>
-          </div>
+<!-- Navigation -->
+<nav class="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <div class="flex-shrink-0 flex items-center">
+          <i class="fas fa-home text-green-700 text-2xl ml-2"></i>
+          <span class="text-xl font-bold text-gray-800">ترس هوم</span>
         </div>
       </div>
-    </nav>
+
+      <!-- Hamburger (Mobile) -->
+      <div class="flex lg:hidden">
+        <button
+          id="mobile-menu-button"
+          class="text-gray-700 hover:text-gray-900 focus:outline-none"
+        >
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden lg:flex items-center space-x-4">
+        <a href="home.html" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100">
+          <i class="fas fa-home ml-1"></i> الرئيسية
+        </a>
+        <a href="catalog.html" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100">
+          <i class="fas fa-th-large ml-1"></i> الكتالوج
+        </a>
+        <a href="dashboard.html" class="nav-link active px-3 py-2 rounded-md text-sm font-medium">
+          <i class="fas fa-tachometer-alt ml-1"></i> لوحة التحكم
+        </a>
+        <button onclick="showAddPropertyPopup()" class="btn-hover bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-lg">
+          <i class="fas fa-plus ml-1"></i> إضافة عقار
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Nav Menu -->
+  <div id="mobile-menu" class="lg:hidden hidden px-4 pb-4">
+    <a href="home.html" class="block nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
+      <i class="fas fa-home ml-1"></i> الرئيسية
+    </a>
+    <a href="catalog.html" class="block nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
+      <i class="fas fa-th-large ml-1"></i> الكتالوج
+    </a>
+    <a href="dashboard.html" class="block nav-link active px-3 py-2 rounded-md text-sm font-medium">
+      <i class="fas fa-tachometer-alt ml-1"></i> لوحة التحكم
+    </a>
+    <button onclick="showAddPropertyPopup()" class="w-full mt-2 btn-hover bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-lg">
+      <i class="fas fa-plus ml-1"></i> إضافة عقار
+    </button>
+  </div>
+</nav>
 
     <!-- Dashboard Content -->
     <div class="min-h-screen">
@@ -5420,6 +5435,15 @@
               }
             }
           });
+
+        
+  const menuBtn = document.getElementById("mobile-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  menuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
 
           // Handle browser back/forward navigation
           window.addEventListener("pageshow", function (event) {
